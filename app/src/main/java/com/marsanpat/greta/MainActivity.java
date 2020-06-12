@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -124,12 +125,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Button inputBut = findViewById(R.id.inputBut);
+        inputBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText text = (EditText)findViewById(R.id.inputText);
+                String input = text.getText().toString();
+                Element elem = new Element();
+                elem.setName(input);
+                elem.setOrganization(organization);
+                elem.setId(2);
+                elem.save();
+            }
+        });
 
-        Organization newOrg = new Select()
-                .from(Organization.class)
-                //.where(Organization_table.id.eq(1))
-                .querySingle();
-        Log.d("Debug",newOrg.getName());
+
 
     }
 
