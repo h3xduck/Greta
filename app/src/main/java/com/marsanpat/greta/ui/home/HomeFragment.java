@@ -108,7 +108,9 @@ public class HomeFragment extends Fragment {
                 Element elem = new Element();
                 elem.setName(input);
                 elem.setOrganization(organization);
-                elem.setId(2);
+                //Our private key will be an id, corresponding to the time and date of the insertion
+                long time = System.currentTimeMillis();
+                elem.setId(time);
                 elem.save();
             }
         });

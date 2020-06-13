@@ -12,7 +12,7 @@ public class Element extends BaseModel {
 
     @Column
     @PrimaryKey
-    int id;
+    long id;
 
     @Column String name;
 
@@ -26,11 +26,11 @@ public class Element extends BaseModel {
         this.name = name;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
