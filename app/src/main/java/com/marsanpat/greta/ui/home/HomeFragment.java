@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.marsanpat.greta.Element;
+import com.marsanpat.greta.Element_Table;
 import com.marsanpat.greta.Organization;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -115,6 +116,25 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        Button deleteBut = root.findViewById(R.id.deleteBut);
+        deleteBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText text = (EditText)root.findViewById(R.id.inputText);
+                String input = text.getText().toString();
+                //First let's calculate how many records we will delete, and show it to the user
+                List<Element> elem = SQLite.select()
+                        .from(Element.class)
+                        .where(Element_Table.name.is(input))
+                        .queryList();
+                Snackbar.make(view, elem.size()+" records will be deleted", Snackbar.LENGTH_LONG)
+                    .show();
+
+                SQLite.delete(Element.class)
+                        .where(Element_Table.name.is(input))
+                        .execute();
+            }
+        });
 
 
 

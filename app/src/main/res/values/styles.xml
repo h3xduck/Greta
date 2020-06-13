@@ -6,6 +6,11 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textViewStyle">@style/MyTextView</item>
+    </style>
+
+    <style name="MyTextView" parent="android:Widget.TextView">
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
