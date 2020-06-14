@@ -1,4 +1,4 @@
-package com.marsanpat.greta;
+package com.marsanpat.greta.Database;
 
 import com.raizlabs.android.dbflow.annotation.Database;
 

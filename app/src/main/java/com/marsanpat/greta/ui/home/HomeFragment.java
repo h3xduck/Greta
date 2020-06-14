@@ -16,9 +16,10 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.marsanpat.greta.Element;
-import com.marsanpat.greta.Element_Table;
-import com.marsanpat.greta.Organization;
+import com.marsanpat.greta.Database.Element;
+import com.marsanpat.greta.Database.Element_Table;
+import com.marsanpat.greta.Database.Keys;
+import com.marsanpat.greta.Database.Organization;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -136,7 +137,18 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
+        Button genKeyBut = root.findViewById(R.id.genKeyBut);
+        genKeyBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Key generated", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                Keys keys = new Keys();
+                keys.generateKey();
+                keys.setUser("Test User");
+                keys.save();
+            }
+        });
 
 
         return root;

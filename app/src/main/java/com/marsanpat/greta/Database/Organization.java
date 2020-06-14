@@ -1,5 +1,6 @@
-package com.marsanpat.greta;
+package com.marsanpat.greta.Database;
 
+import com.marsanpat.greta.Database.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

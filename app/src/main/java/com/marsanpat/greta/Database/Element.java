@@ -1,4 +1,4 @@
-package com.marsanpat.greta;
+package com.marsanpat.greta.Database;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
@@ -16,7 +16,8 @@ public class Element extends BaseModel {
 
     @Column String name;
 
-    @Column @ForeignKey(saveForeignKeyModel = false) Organization organization;
+    @Column @ForeignKey(saveForeignKeyModel = false)
+    Organization organization;
 
     public void setOrganization(Organization organization) {
         this.organization = organization;
