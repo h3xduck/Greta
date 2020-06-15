@@ -17,10 +17,10 @@ public class Element extends BaseModel {
     @Column String name;
 
     @Column @ForeignKey(saveForeignKeyModel = false)
-    Organization organization;
+    User user;
 
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setName(String name) {
@@ -39,7 +39,7 @@ public class Element extends BaseModel {
         return name;
     }
 
-    public Organization getOrganization() {
-        return organization;
+    public User getUser() {
+        return user;
     }
 }

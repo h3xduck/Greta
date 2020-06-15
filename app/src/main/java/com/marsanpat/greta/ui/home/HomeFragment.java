@@ -19,7 +19,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Keys;
-import com.marsanpat.greta.Database.Organization;
+import com.marsanpat.greta.Database.User;
+import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -43,10 +44,10 @@ public class HomeFragment extends Fragment {
         });
 
         //For SQLite
-        final Organization organization = new Organization();
-        organization.setId(1);
-        organization.setName("StaticOrganization");
-        organization.save();
+        final User user = new User();
+        user.setId(0);
+        user.setName("Guest");
+        user.save();
 
         final TextView resultstv = root.findViewById(R.id.results);
         resultstv.setText("Nothing");
@@ -59,13 +60,13 @@ public class HomeFragment extends Fragment {
                         .setAction("Action", null).show();
                 Element elem = new Element();
                 elem.setName("Test Yeah");
-                elem.setOrganization(organization);
+                elem.setUser(user);
                 elem.setId(0);
                 elem.save();
 
                 Element elem2 = new Element();
                 elem2.setName("Test2 Yeah");
-                elem2.setOrganization(organization);
+                elem2.setUser(user);
                 elem2.setId(1);
                 elem2.save();
             }
@@ -109,7 +110,7 @@ public class HomeFragment extends Fragment {
                 String input = text.getText().toString();
                 Element elem = new Element();
                 elem.setName(input);
-                elem.setOrganization(organization);
+                elem.setUser(user);
                 //Our private key will be an id, corresponding to the time and date of the insertion
                 long time = System.currentTimeMillis();
                 elem.setId(time);
@@ -145,7 +146,7 @@ public class HomeFragment extends Fragment {
                         .setAction("Action", null).show();
                 Keys keys = new Keys();
                 keys.generateKey();
-                keys.setUser("Test User");
+                keys.setUser("Guest");
                 keys.save();
             }
         });
