@@ -1,5 +1,6 @@
 package com.marsanpat.greta.ui.slideshow;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.marsanpat.greta.Database.Element;
+import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -48,10 +50,19 @@ public class SlideshowFragment extends Fragment {
         TableRow title = new TableRow(this.getContext());
         TextView id = new TextView(this.getContext());
         TextView content = new TextView(this.getContext());
+        TextView user = new TextView(this.getContext());
         id.setText(" ID ");
         content.setText(" Element ");
+        user.setText(" User ");
+        //Hacky solution to achieve column separation
+        id.setPadding(300,0,300,0);
+        content.setPadding(300,0,300,0);
+        user.setPadding(300,0,300,0);
         title.addView(id);
         title.addView(content);
+        title.addView(user);
+
+
         mainTable.addView(title);
     }
 
@@ -62,6 +73,8 @@ public class SlideshowFragment extends Fragment {
         for(int ii=0; ii<elem.size(); ii++){
             String resultName = elem.get(ii).getName();
             long resultId = elem.get(ii).getId();
+            User resultUser = elem.get(ii).getUser();
+            String resultUserName = resultUser.getName();
             TableRow tr = new TableRow(this.getContext());
             TextView tv = new TextView(this.getContext());
             tv.setText(""+resultId);
@@ -69,8 +82,12 @@ public class SlideshowFragment extends Fragment {
             tr.addView(tv);
             TextView tv2 = new TextView(this.getContext());
             tv2.setText(resultName);
-            tv2.setGravity(Gravity.CENTER);
+            //tv2.setGravity(Gravity.CENTER);
             tr.addView(tv2);
+            TextView tv3 = new TextView(this.getContext());
+            tv3.setText(resultUserName);
+            //tv3.setGravity(Gravity.CENTER);
+            tr.addView(tv3);
             mainTable.addView(tr);
         }
     }

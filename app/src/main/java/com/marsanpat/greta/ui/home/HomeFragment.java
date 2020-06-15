@@ -95,7 +95,6 @@ public class HomeFragment extends Fragment {
                 String result ="";
                 for(int ii=0; ii<elem.size(); ii++){
                     result = result+"\n"+elem.get(ii).getName();
-                    Log.d("Result", result+ii);
                 }
                 TextView resultstv = root.findViewById(R.id.results);
                 resultstv.setText(result);
@@ -108,13 +107,19 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 EditText text = (EditText)root.findViewById(R.id.inputText);
                 String input = text.getText().toString();
-                Element elem = new Element();
-                elem.setName(input);
-                elem.setUser(user);
-                //Our private key will be an id, corresponding to the time and date of the insertion
-                long time = System.currentTimeMillis();
-                elem.setId(time);
-                elem.save();
+                if(!input.equals("")){
+                    Element elem = new Element();
+                    elem.setName(input);
+                    elem.setUser(user);
+                    //Our private key will be an id, corresponding to the time and date of the insertion
+                    long time = System.currentTimeMillis();
+                    elem.setId(time);
+                    elem.save();
+                }else{
+                    Snackbar.make(view, "Invalid input string", Snackbar.LENGTH_LONG)
+                            .show();
+                }
+
             }
         });
 
