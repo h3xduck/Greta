@@ -1,4 +1,4 @@
-package com.marsanpat.greta;
+package com.marsanpat.greta.Utils;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -13,7 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
-import com.marsanpat.greta.MainActivity;
+import com.marsanpat.greta.Activities.MainActivity;
 
 
 public class NotificationUtils extends ContextWrapper {

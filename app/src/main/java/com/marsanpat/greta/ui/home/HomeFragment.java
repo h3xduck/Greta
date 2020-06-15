@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.marsanpat.greta.Activities.MainActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Keys;
@@ -46,7 +47,7 @@ public class HomeFragment extends Fragment {
         //For SQLite
         final User user = new User();
         user.setId(0);
-        user.setName("Guest");
+        user.setName(MainActivity.currentUser);
         user.save();
 
         final TextView resultstv = root.findViewById(R.id.results);

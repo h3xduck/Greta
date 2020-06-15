@@ -1,12 +1,10 @@
-package com.marsanpat.greta;
+package com.marsanpat.greta.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -20,12 +18,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.marsanpat.greta.Database.Keys;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Select;
-
-import java.util.List;
+import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.NotificationUtils;
 
 import static java.lang.Thread.sleep;
 
@@ -34,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
 
     private static final String CHANNEL_ID = "GRETACHANNEL";
+
+    public static String currentUser = "Guest";
 
 
     @Override
@@ -49,10 +45,13 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                notificationsUtils.sendNotificationInDefaultChannel("Title of not","Hey Its working",101);
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
+                //notificationsUtils.sendNotificationInDefaultChannel("Title of not","Hey Its working",101);
 
+                Intent intent = new Intent(getBaseContext(), NoteActivity.class);
+                intent.putExtra("User Name", currentUser);
+                startActivity(intent);
 
             }
         });

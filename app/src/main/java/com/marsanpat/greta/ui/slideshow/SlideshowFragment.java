@@ -52,8 +52,11 @@ public class SlideshowFragment extends Fragment {
         TextView content = new TextView(this.getContext());
         TextView user = new TextView(this.getContext());
         id.setText(" ID ");
+        id.setBackgroundResource(R.drawable.cell_shape);
         content.setText(" Element ");
+        content.setBackgroundResource(R.drawable.cell_shape);
         user.setText(" User ");
+        user.setBackgroundResource(R.drawable.cell_shape);
         //Hacky solution to achieve column separation
         id.setPadding(300,0,300,0);
         content.setPadding(300,0,300,0);
@@ -77,14 +80,17 @@ public class SlideshowFragment extends Fragment {
             String resultUserName = resultUser.getName();
             TableRow tr = new TableRow(this.getContext());
             TextView tv = new TextView(this.getContext());
+            tv.setBackgroundResource(R.drawable.cell_shape);
             tv.setText(""+resultId);
             //tv.setGravity(Gravity.CENTER);
             tr.addView(tv);
             TextView tv2 = new TextView(this.getContext());
+            tv2.setBackgroundResource(R.drawable.cell_shape);
             tv2.setText(resultName);
             //tv2.setGravity(Gravity.CENTER);
             tr.addView(tv2);
             TextView tv3 = new TextView(this.getContext());
+            tv3.setBackgroundResource(R.drawable.cell_shape);
             tv3.setText(resultUserName);
             //tv3.setGravity(Gravity.CENTER);
             tr.addView(tv3);

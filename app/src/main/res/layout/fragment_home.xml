@@ -114,9 +114,9 @@
         android:id="@+id/genKeyBut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="52dp"
+        android:layout_marginStart="30dp"
         android:text="Generate Key"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/insert"
         app:layout_constraintTop_toTopOf="@+id/insert" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
