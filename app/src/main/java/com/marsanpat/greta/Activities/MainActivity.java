@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.Menu;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -19,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.marsanpat.greta.R;
-import com.marsanpat.greta.Utils.NotificationUtils;
+import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
 
 import static java.lang.Thread.sleep;
 

@@ -1,4 +1,4 @@
-package com.marsanpat.greta.Utils;
+package com.marsanpat.greta.Utils.Notifications;
 
 import android.app.Notification;
 import android.app.NotificationChannel;

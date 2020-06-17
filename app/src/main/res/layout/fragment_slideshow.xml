@@ -7,27 +7,59 @@
     tools:context=".ui.slideshow.SlideshowFragment">
 
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="30dp"
             android:layout_marginBottom="30dp"
+            android:paddingRight="50dp"
             android:scrollbars="vertical">
 
             <TableLayout
                 android:id="@+id/mainTable"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"></TableLayout>
+                android:layout_height="wrap_content"></TableLayout>
         </ScrollView>
     </HorizontalScrollView>
+
+    <RadioGroup
+        android:id="@+id/radioGroupTable"
+        android:layout_width="wrap_content"
+        android:layout_height="46dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButtonElements"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Elements table" />
+
+        <RadioButton
+            android:id="@+id/radioButtonKeys"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Keys Table" />
+
+        <RadioButton
+            android:id="@+id/radioButtonUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Users table" />
+
+    </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
