@@ -13,6 +13,7 @@ import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.ui.gallery.GalleryFragment;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class NoteActivity extends AppCompatActivity {
@@ -30,6 +31,14 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText text = (EditText)findViewById(R.id.inputNote);
                 saveNote(view, text, user);
+                //If we pressed the button from this specific fragment, the adapter needs to be updated so that changes appear instantly
+                //TODO this is a bit hacky
+                try{
+                    GalleryFragment.contents.add(calculatePreview(text.getText().toString()));
+                    GalleryFragment.adapter.notifyDataSetChanged();
+                }catch(NullPointerException ex){
+                    //We were not in the GalleryFragment, no update was performed
+                }
 
             }
         });
@@ -74,5 +83,12 @@ public class NoteActivity extends AppCompatActivity {
             //TODO: throw new UserNotFoundException;
             return null;
         }
+    }
+
+    private String calculatePreview(String txt){
+        if(txt.length()>GalleryFragment.MAXIMUM_PREVIEW_LENGTH){
+            return txt.substring(0,16)+"...";
+        }
+        return txt;
     }
 }

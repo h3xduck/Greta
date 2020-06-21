@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String CHANNEL_ID = "GRETACHANNEL";
 
     public static String currentUser = "Guest";
+    public static int currentUserId = 0;
 
 
     @Override
@@ -50,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getBaseContext(), NoteActivity.class);
                 intent.putExtra("User Name", currentUser);
+                intent.putExtra("Caller class", getLocalClassName());
+                Log.d("debug", getLocalClassName());
                 startActivity(intent);
 
             }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.marsanpat.greta.Database.Keys;
 import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.List;
@@ -50,8 +52,6 @@ public class HomeFragment extends Fragment {
         user.setName(MainActivity.currentUser);
         user.save();
 
-        final TextView resultstv = root.findViewById(R.id.results);
-        resultstv.setText("Nothing");
 
         Button insertBut = root.findViewById(R.id.insert);
         insertBut.setOnClickListener(new View.OnClickListener() {
@@ -85,22 +85,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button selectAllBut = root.findViewById(R.id.selectAll);
-        selectAllBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Element> elem = SQLite.select()
-                        .from(Element.class)
-                        //.where(Organization_Table.id.is(1))
-                        .queryList();
-                String result ="";
-                for(int ii=0; ii<elem.size(); ii++){
-                    result = result+"\n"+elem.get(ii).getName();
-                }
-                TextView resultstv = root.findViewById(R.id.results);
-                resultstv.setText(result);
-            }
-        });
 
         Button inputBut = root.findViewById(R.id.inputBut);
         inputBut.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +138,18 @@ public class HomeFragment extends Fragment {
                 keys.generateKey();
                 keys.setUser("Guest");
                 keys.save();
+            }
+        });
+
+        Button resetBut = root.findViewById(R.id.resetBut);
+        resetBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Delete.table(Element.class);
+                Delete.table(Keys.class);
+                Delete.table(User.class);
+                Snackbar.make(view, "The whole DB was reset", Snackbar.LENGTH_LONG).show();
+                //Toast.makeText(getContext(), "Test", Toast.LENGTH_LONG).show();
             }
         });
 
