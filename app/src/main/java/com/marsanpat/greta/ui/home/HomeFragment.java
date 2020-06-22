@@ -27,6 +27,7 @@ import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Date;
 import java.util.List;
 
 public class HomeFragment extends Fragment {
@@ -99,6 +100,7 @@ public class HomeFragment extends Fragment {
                     //Our private key will be an id, corresponding to the time and date of the insertion
                     long time = System.currentTimeMillis();
                     elem.setId(time);
+                    elem.setLastModification(new Date(time));
                     elem.save();
                 }else{
                     Snackbar.make(view, "Invalid input string", Snackbar.LENGTH_LONG)

@@ -1,5 +1,6 @@
 package com.marsanpat.greta.Activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -20,6 +21,8 @@ import com.marsanpat.greta.ui.gallery.GalleryFragment;
 import com.marsanpat.greta.ui.gallery.GalleryViewModel;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Date;
+
 public class NoteActivity extends AppCompatActivity {
     private EditText text;
 
@@ -29,6 +32,7 @@ public class NoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note);
         String userName = getIntent().getStringExtra("User Name");
         final String startingText = getIntent().getStringExtra("Initial Text");
+        final long detectedId = getIntent().getLongExtra("ID", 0);
 
         final User user = queryUser(userName);
         text = (EditText)findViewById(R.id.inputNote);
@@ -40,7 +44,7 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String input = text.getText().toString();
-                saveNote(view, input, user);
+                saveNote(view, input, user, detectedId);
             }
         });
 
@@ -54,16 +58,22 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
-    public void saveNote(View view, String input, User user){
+    public void saveNote(View view, String input, User user, long id){
         if(!input.equals("")){
             Element elem = new Element();
             elem.setName(input);
             elem.setUser(user);
-            long time = System.currentTimeMillis();
-            elem.setId(time);
+            if(id==0){
+                long time = System.currentTimeMillis();
+                elem.setId(time);
+            }else{
+
+                elem.setId(id);
+            }
+            elem.setLastModification(new Date(System.currentTimeMillis()));
             elem.save();
             GalleryFragment.newElement = elem;
-
+            Log.d("debug", "Saved id"+elem.getId()+ " content"+elem.getName()+ " user"+elem.getUser().getName());
 
             Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
                     .show();

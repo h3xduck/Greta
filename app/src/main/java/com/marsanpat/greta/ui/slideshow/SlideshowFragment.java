@@ -25,6 +25,7 @@ import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.util.Date;
 import java.util.List;
 
 public class SlideshowFragment extends Fragment {
@@ -97,19 +98,25 @@ public class SlideshowFragment extends Fragment {
         TextView id = new TextView(this.getContext());
         TextView content = new TextView(this.getContext());
         TextView user = new TextView(this.getContext());
+        TextView lastModification = new TextView(this.getContext());
         id.setText(" ID ");
         id.setBackgroundResource(R.drawable.cell_shape);
         content.setText(" Element ");
         content.setBackgroundResource(R.drawable.cell_shape);
         user.setText(" User ");
         user.setBackgroundResource(R.drawable.cell_shape);
+        lastModification.setText(" Last Modification ");
+        lastModification.setBackgroundResource(R.drawable.cell_shape);
         //Hacky solution to achieve column separation
         id.setPadding(300,0,300,0);
         content.setPadding(300,0,300,0);
         user.setPadding(300,0,300,0);
+        lastModification.setPadding(300,0,300,0);
         title.addView(id);
         title.addView(content);
         title.addView(user);
+        title.addView(lastModification);
+
 
 
         mainTable.addView(title);
@@ -157,6 +164,7 @@ public class SlideshowFragment extends Fragment {
             long resultId = elem.get(ii).getId();
             User resultUser = elem.get(ii).getUser();
             String resultUserName = resultUser.getName();
+            Date lastModification = elem.get(ii).getLastModification();
             TableRow tr = new TableRow(this.getContext());
             TextView tv = new TextView(this.getContext());
             tv.setBackgroundResource(R.drawable.cell_shape);
@@ -173,6 +181,11 @@ public class SlideshowFragment extends Fragment {
             tv3.setText(resultUserName);
             //tv3.setGravity(Gravity.CENTER);
             tr.addView(tv3);
+            TextView tv4 = new TextView(this.getContext());
+            tv4.setBackgroundResource(R.drawable.cell_shape);
+            tv4.setText(lastModification.toString());
+            //tv4.setGravity(Gravity.CENTER);
+            tr.addView(tv4);
             mainTable.addView(tr);
         }
     }

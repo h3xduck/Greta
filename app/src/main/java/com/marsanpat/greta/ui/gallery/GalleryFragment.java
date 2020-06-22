@@ -1,5 +1,6 @@
 package com.marsanpat.greta.ui.gallery;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -40,6 +42,7 @@ public class GalleryFragment extends Fragment {
     private static List<Long> contentIds = new ArrayList<>();
     public static final int MAXIMUM_PREVIEW_LENGTH = 100;
     public static Element newElement = null;
+    private static Element lastClickedElement = null;
     private View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -71,7 +74,7 @@ public class GalleryFragment extends Fragment {
 
     private void showResults(View root){
         //Dynamically show stored notes in the db
-        ListView lv = root.findViewById(R.id.listyView);
+        final ListView lv = root.findViewById(R.id.listyView);
         lv.setClickable(true);
 
         List<Element> elem = SQLite.select()
@@ -84,8 +87,7 @@ public class GalleryFragment extends Fragment {
         contents = new ArrayList<>();
         contentIds = new ArrayList<>();
         for(int ii=0; ii<elem.size(); ii++){
-            contents.add(calculatePreview(elem.get(ii).getName()));
-            contentIds.add(elem.get(ii).getId());
+            addToList(elem.get(ii));
         }
 
         adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents);
@@ -94,24 +96,92 @@ public class GalleryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(getContext(), "Clicked: "+contents.get(position), Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getContext(), NoteActivity.class);
-                intent.putExtra("User Name", currentUser);
-                //searching for the element in the db, with the id
-                Element element = SQLite.select()
-                        .from(Element.class)
-                        .where(Element_Table.id.is(contentIds.get(position)))
-                        .querySingle()
-                        ;
-                intent.putExtra("Initial Text", element.getName());
+                launchNoteActivity(position);
 
-                //This is not optimal, but instead of rewriting the note we will delete it and create it again
-                SQLite.delete()
-                        .from(Element.class)
-                        .where(Element_Table.id.is(contentIds.get(position)));
-                //TODO needs refactoring
-                contents.remove(element.getName());
-                contentIds.remove(element.getId());
-                startActivity(intent);
+            }
+        });
+        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final CharSequence [] options = {"Edit", "Remove", "More Info"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Note Options");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, final int item) { //item is the option selected
+                        //Decide the message depending on the option selected
+                        String message;
+                        switch (item){
+                            case 0:
+                                //Edit
+                                message = "Do you want to edit this note?";
+                                break;
+                            case 1:
+                                //Remove
+                                message = "Are you sure to remove this note?";
+                                break;
+                            case 2:
+                                //More info
+                                message = "Note properties will be displayed";
+                                break;
+                            default:
+                                message = "Not implemented";
+                        }
+
+                        new AlertDialog.Builder(getContext())
+                                .setTitle(options[item])
+                                .setMessage(message)
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //TODO REMOVE
+                                        Toast.makeText(getContext(),"Cancelled",Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //TODO CHANGE THIS WITH APPROPRIATE MESSAGE
+                                        Toast.makeText(getContext(),"Accepted",Toast.LENGTH_SHORT).show();
+                                        //Get the element to operate with it
+                                        long id = contentIds.get(position);
+                                        Element toOperate = SQLite.select()
+                                                .from(Element.class)
+                                                .where(Element_Table.id.is(id))
+                                                .querySingle();
+
+                                        switch (item){
+                                            case 0:
+                                                //Edit:
+                                                launchNoteActivity(position);
+                                                break;
+                                            case 1:
+                                                //Remove
+                                                removeFromList(toOperate);
+                                                //Remove the element from the DB too
+                                                SQLite.delete()
+                                                        .from(Element.class)
+                                                        .where(Element_Table.id.is(id))
+                                                        .execute();
+                                                break;
+                                            case 2:
+                                                //More Info
+                                                String info = "User: "+toOperate.getUser().getName()+
+                                                        "\nLast Modification: "+toOperate.getLastModification().toString();
+                                                new AlertDialog.Builder(getContext())
+                                                        .setTitle(options[item])
+                                                        .setMessage(info)
+                                                        .show();
+                                        }
+                                    }
+                                })
+                                .show();
+                    }
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                return true; //If you set this to false, the onclick is performed anyways
             }
         });
 
@@ -122,11 +192,16 @@ public class GalleryFragment extends Fragment {
         super.onResume();
         if(newElement != null){
             //A new element is in the db. This is a hacky but fast and easy way to know which one it is
-            contents.add(calculatePreview(newElement.getName()));
-            contentIds.add(newElement.getId());
-            newElement = null;
+            if(lastClickedElement!=null){
+                //If this is null, it means that the note is new and not rewriting other.
+                removeFromList(lastClickedElement);
+            }
+            addToList(newElement);
+
             Log.d("debug", "added element");
         }
+        newElement = null;
+        lastClickedElement = null;
     }
 
     private String calculatePreview(String txt){
@@ -144,11 +219,37 @@ public class GalleryFragment extends Fragment {
     }
 
     private void addToList(Element elem){
-        //TODO
+        contents.add(calculatePreview(elem.getName()));
+        contentIds.add(elem.getId());
+        try{
+            adapter.notifyDataSetChanged();
+        }catch(NullPointerException ex){
+            //Occurs when OnCreate is called
+        }
+
     }
 
     private void removeFromList(Element elem){
-        //TODO
+        contents.remove(calculatePreview(elem.getName()));
+        contentIds.remove(elem.getId());
+        adapter.notifyDataSetChanged();
+    }
+
+    private void launchNoteActivity (int arraysPosition){
+        Intent intent = new Intent(getContext(), NoteActivity.class);
+        intent.putExtra("User Name", currentUser);
+        //searching for the element in the db, with the id
+        Element element = SQLite.select()
+                .from(Element.class)
+                .where(Element_Table.id.is(contentIds.get(arraysPosition)))
+                .querySingle()
+                ;
+        intent.putExtra("Initial Text", element.getName());
+        intent.putExtra("ID", element.getId());
+        startActivity(intent);
+
+        //This is not optimal, but we will keep track of which element the user clicked
+        lastClickedElement = element;
     }
 
 }
