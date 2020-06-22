@@ -39,24 +39,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
         final NotificationUtils notificationsUtils = new NotificationUtils(this);
         notificationsUtils.createChannel(CHANNEL_ID,"GRETACHANNEL");
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
-                //notificationsUtils.sendNotificationInDefaultChannel("Title of not","Hey Its working",101);
-
-                Intent intent = new Intent(getBaseContext(), NoteActivity.class);
-                intent.putExtra("User Name", currentUser);
-                intent.putExtra("Caller class", getLocalClassName());
-                Log.d("debug", getLocalClassName());
-                startActivity(intent);
-
-            }
-        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each

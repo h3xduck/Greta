@@ -1,12 +1,15 @@
 package com.marsanpat.greta.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.marsanpat.greta.Database.Element;
@@ -14,6 +17,7 @@ import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.ui.gallery.GalleryFragment;
+import com.marsanpat.greta.ui.gallery.GalleryViewModel;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class NoteActivity extends AppCompatActivity {
@@ -31,15 +35,6 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
                 EditText text = (EditText)findViewById(R.id.inputNote);
                 saveNote(view, text, user);
-                //If we pressed the button from this specific fragment, the adapter needs to be updated so that changes appear instantly
-                //TODO this is a bit hacky
-                try{
-                    GalleryFragment.contents.add(calculatePreview(text.getText().toString()));
-                    GalleryFragment.adapter.notifyDataSetChanged();
-                }catch(NullPointerException ex){
-                    //We were not in the GalleryFragment, no update was performed
-                }
-
             }
         });
 
@@ -62,10 +57,14 @@ public class NoteActivity extends AppCompatActivity {
             long time = System.currentTimeMillis();
             elem.setId(time);
             elem.save();
-            Snackbar.make(view, "Note saved", Snackbar.LENGTH_LONG)
+            GalleryFragment.newElement = elem;
+
+
+            Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
                     .show();
+            finish();
         }else{
-            Snackbar.make(view, "Please write something before saving", Snackbar.LENGTH_LONG)
+            Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
                     .show();
         }
     }
