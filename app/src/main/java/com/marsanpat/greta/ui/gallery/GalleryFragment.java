@@ -6,10 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +38,7 @@ public class GalleryFragment extends Fragment {
     private static ArrayAdapter<String> adapter;
     private static ArrayList<String> contents = new ArrayList<>();
     private static List<Long> contentIds = new ArrayList<>();
-    public static final int MAXIMUM_PREVIEW_LENGTH = 30;
+    public static final int MAXIMUM_PREVIEW_LENGTH = 100;
     public static Element newElement = null;
     private View root;
 
@@ -57,7 +59,8 @@ public class GalleryFragment extends Fragment {
 
                 Intent intent = new Intent(root.getContext(), NoteActivity.class);
                 intent.putExtra("User Name", currentUser);
-                startActivityForResult(intent, 0);
+                intent.putExtra("Initial Text", "");
+                startActivity(intent);
 
             }
         });
@@ -69,6 +72,7 @@ public class GalleryFragment extends Fragment {
     private void showResults(View root){
         //Dynamically show stored notes in the db
         ListView lv = root.findViewById(R.id.listyView);
+        lv.setClickable(true);
 
         List<Element> elem = SQLite.select()
                 .from(Element.class)
@@ -86,6 +90,30 @@ public class GalleryFragment extends Fragment {
 
         adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents);
         lv.setAdapter(adapter);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getContext(), "Clicked: "+contents.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getContext(), NoteActivity.class);
+                intent.putExtra("User Name", currentUser);
+                //searching for the element in the db, with the id
+                Element element = SQLite.select()
+                        .from(Element.class)
+                        .where(Element_Table.id.is(contentIds.get(position)))
+                        .querySingle()
+                        ;
+                intent.putExtra("Initial Text", element.getName());
+
+                //This is not optimal, but instead of rewriting the note we will delete it and create it again
+                SQLite.delete()
+                        .from(Element.class)
+                        .where(Element_Table.id.is(contentIds.get(position)));
+                //TODO needs refactoring
+                contents.remove(element.getName());
+                contentIds.remove(element.getId());
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -94,7 +122,7 @@ public class GalleryFragment extends Fragment {
         super.onResume();
         if(newElement != null){
             //A new element is in the db. This is a hacky but fast and easy way to know which one it is
-            contents.add(newElement.getName());
+            contents.add(calculatePreview(newElement.getName()));
             contentIds.add(newElement.getId());
             newElement = null;
             Log.d("debug", "added element");
@@ -102,10 +130,25 @@ public class GalleryFragment extends Fragment {
     }
 
     private String calculatePreview(String txt){
+        if(txt.contains("\n")){
+            String first = txt.split("\n")[0];
+            if(first.length()>MAXIMUM_PREVIEW_LENGTH){
+                first = first.substring(0,MAXIMUM_PREVIEW_LENGTH-4);
+            }
+            return first+"\n...";
+        }
         if(txt.length()>MAXIMUM_PREVIEW_LENGTH){
             return txt.substring(0,MAXIMUM_PREVIEW_LENGTH-4)+"...";
         }
         return txt;
+    }
+
+    private void addToList(Element elem){
+        //TODO
+    }
+
+    private void removeFromList(Element elem){
+        //TODO
     }
 
 }

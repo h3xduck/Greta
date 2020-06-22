@@ -21,20 +21,26 @@ import com.marsanpat.greta.ui.gallery.GalleryViewModel;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 public class NoteActivity extends AppCompatActivity {
+    private EditText text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
         String userName = getIntent().getStringExtra("User Name");
+        final String startingText = getIntent().getStringExtra("Initial Text");
+
         final User user = queryUser(userName);
+        text = (EditText)findViewById(R.id.inputNote);
+        text.setText(startingText);
 
         Button saveBut = findViewById(R.id.saveBut);
         saveBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText text = (EditText)findViewById(R.id.inputNote);
-                saveNote(view, text, user);
+
+                String input = text.getText().toString();
+                saveNote(view, input, user);
             }
         });
 
@@ -48,8 +54,7 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
-    public void saveNote(View view, EditText text, User user){
-        String input = text.getText().toString();
+    public void saveNote(View view, String input, User user){
         if(!input.equals("")){
             Element elem = new Element();
             elem.setName(input);
