@@ -64,12 +64,14 @@ public class HomeFragment extends Fragment {
                 elem.setName("Test Yeah");
                 elem.setUser(user);
                 elem.setId(0);
+                elem.setLastModification(new Date(0));
                 elem.save();
 
                 Element elem2 = new Element();
                 elem2.setName("Test2 Yeah");
                 elem2.setUser(user);
                 elem2.setId(1);
+                elem2.setLastModification(new Date(0));
                 elem2.save();
             }
         });
