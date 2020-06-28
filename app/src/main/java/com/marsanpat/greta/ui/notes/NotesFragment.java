@@ -1,4 +1,4 @@
-package com.marsanpat.greta.ui.gallery;
+package com.marsanpat.greta.ui.notes;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,16 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,9 +30,9 @@ import java.util.List;
 
 import static com.marsanpat.greta.Activities.MainActivity.currentUser;
 
-public class GalleryFragment extends Fragment {
+public class NotesFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
+    private NotesViewModel notesViewModel;
     private static ArrayAdapter<String> adapter;
     private static ArrayList<String> contents = new ArrayList<>();
     private static List<Long> contentIds = new ArrayList<>();
@@ -47,7 +43,7 @@ public class GalleryFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        galleryViewModel = ViewModelProviders.of(this).get(GalleryViewModel.class);
+        notesViewModel = ViewModelProviders.of(this).get(NotesViewModel.class);
         root = inflater.inflate(R.layout.fragment_gallery, container, false);
 
 
@@ -219,8 +215,10 @@ public class GalleryFragment extends Fragment {
     }
 
     private void addToList(Element elem){
-        contents.add(calculatePreview(elem.getName()));
-        contentIds.add(elem.getId());
+        //This adds the element to the string list and updates the adapter.
+        //We should consider different ordering methods. For now, let's put the new elements on the top of the list
+        contents.add(0,calculatePreview(elem.getName()));
+        contentIds.add(0,elem.getId());
         try{
             adapter.notifyDataSetChanged();
         }catch(NullPointerException ex){

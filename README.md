@@ -7,7 +7,7 @@ I am still (self-)learning Android development, so please bear in mind that opti
 ## Objective
 Greta is thought to be a mobile app which supports the creation and management of text notes created by the user. Notes will be encrypted and stored in the system using SQLite (only locally). Export and Import of notes will be supported.
 
-Once the app is finish, Greta will be integrated into a larger, more ambitious project of mine which I will eventually release as well.
+Once the app is finished, Greta will be integrated into a larger, more ambitious project which I will eventually release as well.
 
 --------------------
 ## Features (so far)

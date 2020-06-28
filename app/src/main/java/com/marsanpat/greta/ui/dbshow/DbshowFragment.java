@@ -1,13 +1,9 @@
-package com.marsanpat.greta.ui.slideshow;
+package com.marsanpat.greta.ui.dbshow;
 
-import android.graphics.Color;
-import android.icu.text.RelativeDateTimeFormatter;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -28,16 +24,16 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import java.util.Date;
 import java.util.List;
 
-public class SlideshowFragment extends Fragment {
+public class DbshowFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
+    private DbshowViewModel dbshowViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                ViewModelProviders.of(this).get(SlideshowViewModel.class);
+        dbshowViewModel =
+                ViewModelProviders.of(this).get(DbshowViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        dbshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
 

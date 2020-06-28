@@ -1,10 +1,7 @@
 package com.marsanpat.greta.Activities;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,13 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
-import com.marsanpat.greta.ui.gallery.GalleryFragment;
-import com.marsanpat.greta.ui.gallery.GalleryViewModel;
+import com.marsanpat.greta.ui.notes.NotesFragment;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Date;
@@ -72,7 +67,7 @@ public class NoteActivity extends AppCompatActivity {
             }
             elem.setLastModification(new Date(System.currentTimeMillis()));
             elem.save();
-            GalleryFragment.newElement = elem;
+            NotesFragment.newElement = elem;
             Log.d("debug", "Saved id"+elem.getId()+ " content"+elem.getName()+ " user"+elem.getUser().getName());
 
             Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
@@ -100,7 +95,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private String calculatePreview(String txt){
-        if(txt.length()>GalleryFragment.MAXIMUM_PREVIEW_LENGTH){
+        if(txt.length()> NotesFragment.MAXIMUM_PREVIEW_LENGTH){
             return txt.substring(0,16)+"...";
         }
         return txt;
