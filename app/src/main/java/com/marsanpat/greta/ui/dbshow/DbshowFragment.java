@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.marsanpat.greta.Database.Element;
-import com.marsanpat.greta.Database.Keys;
+import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -78,7 +78,7 @@ public class DbshowFragment extends Fragment {
         TableLayout mainTable = (TableLayout)root.findViewById(R.id.mainTable);
         mainTable.removeAllViews();
         initializeTitleRow_keys(root, mainTable);
-        includeDBContents_keys(root, mainTable);
+        includeDBContents_salts(root, mainTable);
     }
 
     public void drawElementsDB_users(View root){
@@ -122,9 +122,9 @@ public class DbshowFragment extends Fragment {
         TableRow title = new TableRow(this.getContext());
         TextView user = new TextView(this.getContext());
         TextView key = new TextView(this.getContext());
-        user.setText(" USER ");
+        user.setText(" ELEMENT_ID ");
         user.setBackgroundResource(R.drawable.cell_shape);
-        key.setText(" KEY ");
+        key.setText(" SALT ");
         key.setBackgroundResource(R.drawable.cell_shape);
         //Hacky solution to achieve column separation
         user.setPadding(300,0,300,0);
@@ -156,7 +156,7 @@ public class DbshowFragment extends Fragment {
                 .from(Element.class)
                 .queryList();
         for(int ii=0; ii<elem.size(); ii++){
-            String resultName = elem.get(ii).getName();
+            String content = elem.get(ii).getContent();
             long resultId = elem.get(ii).getId();
             User resultUser = elem.get(ii).getUser();
             String resultUserName = resultUser.getName();
@@ -169,7 +169,7 @@ public class DbshowFragment extends Fragment {
             tr.addView(tv);
             TextView tv2 = new TextView(this.getContext());
             tv2.setBackgroundResource(R.drawable.cell_shape);
-            tv2.setText(resultName);
+            tv2.setText(content);
             //tv2.setGravity(Gravity.CENTER);
             tr.addView(tv2);
             TextView tv3 = new TextView(this.getContext());
@@ -186,22 +186,22 @@ public class DbshowFragment extends Fragment {
         }
     }
 
-    private void includeDBContents_keys(View root, TableLayout mainTable){
-        List<Keys> elem = SQLite.select()
-                .from(Keys.class)
+    private void includeDBContents_salts(View root, TableLayout mainTable){
+        List<Salt> elem = SQLite.select()
+                .from(Salt.class)
                 .queryList();
         for(int ii=0; ii<elem.size(); ii++){
-            String resultUserName = elem.get(ii).getUser();
-            String resultKey = elem.get(ii).getKey();
+            long referencedElementID = elem.get(ii).getElement().getId();
+            String resultSalt = elem.get(ii).getSalt();
             TableRow tr = new TableRow(this.getContext());
             TextView tv = new TextView(this.getContext());
             tv.setBackgroundResource(R.drawable.cell_shape);
-            tv.setText(resultUserName);
+            tv.setText(String.valueOf(referencedElementID));
             //tv.setGravity(Gravity.CENTER);
             tr.addView(tv);
             TextView tv2 = new TextView(this.getContext());
             tv2.setBackgroundResource(R.drawable.cell_shape);
-            tv2.setText(resultKey);
+            tv2.setText(resultSalt);
             //tv2.setGravity(Gravity.CENTER);
             tr.addView(tv2);
             mainTable.addView(tr);

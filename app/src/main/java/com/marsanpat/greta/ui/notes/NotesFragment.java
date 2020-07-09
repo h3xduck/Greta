@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marsanpat.greta.Activities.MainActivity;
 import com.marsanpat.greta.Activities.NoteActivity;
+import com.marsanpat.greta.Activities.PasswordActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.R;
@@ -99,7 +100,7 @@ public class NotesFragment extends Fragment {
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                final CharSequence [] options = {"Edit", "Remove", "More Info"};
+                final CharSequence [] options = {"Edit", "Remove", "More Info", "Encrypt this note"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Note Options");
                 builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -119,6 +120,10 @@ public class NotesFragment extends Fragment {
                             case 2:
                                 //More info
                                 message = "Note properties will be displayed";
+                                break;
+                            case 3:
+                                //Encryption
+                                message = "By encrypting this note, a password will be needed for any modification and its visualization";
                                 break;
                             default:
                                 message = "Not implemented";
@@ -168,6 +173,11 @@ public class NotesFragment extends Fragment {
                                                         .setTitle(options[item])
                                                         .setMessage(info)
                                                         .show();
+                                                break;
+                                            case 3:
+                                                //Encryption
+                                                launchPasswordActivity(position);
+
                                         }
                                     }
                                 })
@@ -177,7 +187,7 @@ public class NotesFragment extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.show();
 
-                return true; //If you set this to false, the onclick is performed anyways
+                return true; //If you set this to false, the onclick is performed anyways = don't do it
             }
         });
 
@@ -217,7 +227,7 @@ public class NotesFragment extends Fragment {
     private void addToList(Element elem){
         //This adds the element to the string list and updates the adapter.
         //We should consider different ordering methods. For now, let's put the new elements on the top of the list
-        contents.add(0,calculatePreview(elem.getName()));
+        contents.add(0,calculatePreview(elem.getContent()));
         contentIds.add(0,elem.getId());
         try{
             adapter.notifyDataSetChanged();
@@ -228,7 +238,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void removeFromList(Element elem){
-        contents.remove(calculatePreview(elem.getName()));
+        contents.remove(calculatePreview(elem.getContent()));
         contentIds.remove(elem.getId());
         adapter.notifyDataSetChanged();
     }
@@ -242,12 +252,32 @@ public class NotesFragment extends Fragment {
                 .where(Element_Table.id.is(contentIds.get(arraysPosition)))
                 .querySingle()
                 ;
-        intent.putExtra("Initial Text", element.getName());
+        intent.putExtra("Initial Text", element.getContent());
         intent.putExtra("ID", element.getId());
         startActivity(intent);
 
         //This is not optimal, but we will keep track of which element the user clicked
         lastClickedElement = element;
+    }
+
+    private void launchPasswordActivity (int arraysPosition){
+        Intent intent = new Intent(getContext(), PasswordActivity.class);
+        long idToSearch = this.contentIds.get(arraysPosition);
+        intent.putExtra("ID", idToSearch);
+        startActivityForResult(intent,1);
+    }
+
+    // Call Back method  to get the Message form other Activity
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Result of PasswordActivity
+        if(requestCode==1)
+        {
+            String message=data.getStringExtra("MESSAGE");
+
+        }
     }
 
 }

@@ -3,8 +3,10 @@ package com.marsanpat.greta.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -19,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
+import com.raizlabs.android.dbflow.sql.language.Operator;
 
 import static java.lang.Thread.sleep;
 
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String currentUser = "Guest";
     public static int currentUserId = 0;
+    public static String UserTempPassword;
 
 
     @Override
@@ -61,6 +65,27 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        //For now, we only have the settings option but let's build a switch for future options
+        switch (item.getItemId()){
+            case R.id.action_settings:
+                startSettingsActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void startSettingsActivity(){
+        //TODO
+        Toast toast = Toast.makeText(this, "Under development", Toast.LENGTH_SHORT);
+        toast.show();
+        /*Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);*/
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {

@@ -13,6 +13,7 @@ import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.marsanpat.greta.ui.notes.NotesFragment;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -39,7 +40,15 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String input = text.getText().toString();
-                saveNote(view, input, user, detectedId);
+                if(NoteManager.saveNote(input, user, detectedId)==-1){
+                    //error
+                    Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
+                            .show();
+                }else{
+                    Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
+                            .show();
+                    finish();
+                };
             }
         });
 
@@ -51,32 +60,6 @@ public class NoteActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void saveNote(View view, String input, User user, long id){
-        if(!input.equals("")){
-            Element elem = new Element();
-            elem.setName(input);
-            elem.setUser(user);
-            if(id==0){
-                long time = System.currentTimeMillis();
-                elem.setId(time);
-            }else{
-
-                elem.setId(id);
-            }
-            elem.setLastModification(new Date(System.currentTimeMillis()));
-            elem.save();
-            NotesFragment.newElement = elem;
-            Log.d("debug", "Saved id"+elem.getId()+ " content"+elem.getName()+ " user"+elem.getUser().getName());
-
-            Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
-                    .show();
-            finish();
-        }else{
-            Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
-                    .show();
-        }
     }
 
     public User queryUser(String name){

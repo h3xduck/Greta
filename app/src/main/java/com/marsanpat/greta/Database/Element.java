@@ -16,7 +16,7 @@ public class Element extends BaseModel {
     @PrimaryKey
     long id;
 
-    @Column String name;
+    @Column String content;
 
     @Column @ForeignKey(saveForeignKeyModel = false)
     User user;
@@ -28,8 +28,8 @@ public class Element extends BaseModel {
         this.user = user;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public void setId(long id) {
@@ -40,8 +40,8 @@ public class Element extends BaseModel {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getContent() {
+        return content;
     }
 
     public User getUser() {

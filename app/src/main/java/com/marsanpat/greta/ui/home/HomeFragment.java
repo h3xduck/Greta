@@ -1,14 +1,12 @@
 package com.marsanpat.greta.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,9 +18,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.marsanpat.greta.Activities.MainActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
-import com.marsanpat.greta.Database.Keys;
+import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.User;
-import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -61,14 +58,14 @@ public class HomeFragment extends Fragment {
                 Snackbar.make(view, "Inserting a record", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 Element elem = new Element();
-                elem.setName("Test Yeah");
+                elem.setContent("Test Yeah");
                 elem.setUser(user);
                 elem.setId(0);
                 elem.setLastModification(new Date(0));
                 elem.save();
 
                 Element elem2 = new Element();
-                elem2.setName("Test2 Yeah");
+                elem2.setContent("Test2 Yeah");
                 elem2.setUser(user);
                 elem2.setId(1);
                 elem2.setLastModification(new Date(0));
@@ -83,7 +80,7 @@ public class HomeFragment extends Fragment {
                 Element elem = SQLite.select()
                         .from(Element.class)
                         .querySingle();
-                Snackbar.make(view, "Retrieved: "+elem.getName(), Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Retrieved: "+elem.getContent(), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -97,7 +94,7 @@ public class HomeFragment extends Fragment {
                 String input = text.getText().toString();
                 if(!input.equals("")){
                     Element elem = new Element();
-                    elem.setName(input);
+                    elem.setContent(input);
                     elem.setUser(user);
                     //Our private key will be an id, corresponding to the time and date of the insertion
                     long time = System.currentTimeMillis();
@@ -121,27 +118,25 @@ public class HomeFragment extends Fragment {
                 //First let's calculate how many records we will delete, and show it to the user
                 List<Element> elem = SQLite.select()
                         .from(Element.class)
-                        .where(Element_Table.name.is(input))
+                        .where(Element_Table.content.is(input))
                         .queryList();
                 Snackbar.make(view, elem.size()+" records will be deleted", Snackbar.LENGTH_LONG)
                     .show();
 
                 SQLite.delete(Element.class)
-                        .where(Element_Table.name.is(input))
+                        .where(Element_Table.content.is(input))
                         .execute();
             }
         });
 
+        //TODO CHANGE THIS, NOW THIS IS A SALT
         Button genKeyBut = root.findViewById(R.id.genKeyBut);
         genKeyBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Key generated", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-                Keys keys = new Keys();
-                keys.generateKey();
-                keys.setUser("Guest");
-                keys.save();
+                /////
             }
         });
 
@@ -150,14 +145,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Delete.table(Element.class);
-                Delete.table(Keys.class);
+                Delete.table(Salt.class);
                 Delete.table(User.class);
                 Snackbar.make(view, "The whole DB was reset", Snackbar.LENGTH_LONG).show();
                 //Toast.makeText(getContext(), "Test", Toast.LENGTH_LONG).show();
             }
         });
 
-
+    
         return root;
     }
 }
