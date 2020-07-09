@@ -4,6 +4,7 @@ import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ForeignKey;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.Date;
@@ -54,5 +55,25 @@ public class Element extends BaseModel {
 
     public void setEncrypted(boolean encrypted) {
         this.encrypted = encrypted;
+    }
+
+    public static boolean isElementEncrypted(long id){
+        Element e = SQLite.select()
+                .from(Element.class)
+                .where(Element_Table.id.is(id))
+                .querySingle();
+        try{
+            return e.isEncrypted();
+        }catch(NullPointerException ex){
+            return false;
+        }
+    }
+
+    public static Element searchElement(long id){
+        Element e = SQLite.select()
+                .from(Element.class)
+                .where(Element_Table.id.is(id))
+                .querySingle();
+        return e;
     }
 }

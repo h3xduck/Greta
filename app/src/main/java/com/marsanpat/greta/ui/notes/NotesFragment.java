@@ -1,36 +1,48 @@
 package com.marsanpat.greta.ui.notes;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.marsanpat.greta.Activities.MainActivity;
 import com.marsanpat.greta.Activities.NoteActivity;
 import com.marsanpat.greta.Activities.PasswordActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
+import com.marsanpat.greta.Database.Salt;
+import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
+import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.tozny.crypto.android.AesCbcWithIntegrity;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.marsanpat.greta.Activities.MainActivity.currentUser;
+import static com.marsanpat.greta.Utils.Encryption.CryptoUtils.getKeyFromPasswordAndSalt;
 
 public class NotesFragment extends Fragment {
 
@@ -75,7 +87,7 @@ public class NotesFragment extends Fragment {
         final ListView lv = root.findViewById(R.id.listyView);
         lv.setClickable(true);
 
-        List<Element> elem = SQLite.select()
+        final List<Element> elem = SQLite.select()
                 .from(Element.class)
                 .queryList();
 
@@ -91,8 +103,16 @@ public class NotesFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getContext(), "Clicked: "+contents.get(position), Toast.LENGTH_SHORT).show();
-                launchNoteActivity(position);
+                Log.d("debug","Clicked: "+contents.get(position));
+
+                //Two options, the note might be encrypted or not. If it isn't, we launch the activity and let the user modify it. Otherwise we need the password (we only have encrypted garbage)
+                if(Element.isElementEncrypted(contentIds.get(position))){
+                    //Note encrypted
+                    promptForPassword(getContext(),Element.searchElement(contentIds.get(position)));
+                }else{
+                    //Note not encrypted
+                    launchNoteActivity(position);
+                }
 
             }
         });
@@ -197,7 +217,7 @@ public class NotesFragment extends Fragment {
         if(newElement != null){
             //A new element is in the db. This is a hacky but fast and easy way to know which one it is
             if(lastClickedElement!=null){
-                //If this is null, it means that the note is new and not rewriting other.
+                //If we are here, it means that the note is being overwritten.
                 removeFromList(lastClickedElement);
             }
             addToList(newElement);
@@ -208,9 +228,11 @@ public class NotesFragment extends Fragment {
         lastClickedElement = null;
     }
 
-    private String calculatePreview(String txt, boolean isEncrypted){
+    private String calculatePreview(String txt, boolean isEncrypted){ 
+        String ENCRYPTED_NOTE_PREVIEW = "*************";
         if(isEncrypted) {
-            return "***********";
+            Log.d("debug", "encryption detected on element with content "+txt);
+            return ENCRYPTED_NOTE_PREVIEW;
         }else{
             if (txt.contains("\n")) {
                 String first = txt.split("\n")[0];
@@ -224,6 +246,14 @@ public class NotesFragment extends Fragment {
             }
             return txt;
         }
+    }
+
+    private String calculatePreviewWithID(long id) {
+        Element elem= SQLite.select()
+                .from(Element.class)
+                .where(Element_Table.id.is(id))
+                .querySingle();
+        return calculatePreview(elem.getContent(), elem.isEncrypted());
     }
 
     private void addToList(Element elem){
@@ -246,31 +276,59 @@ public class NotesFragment extends Fragment {
     }
 
     private void launchNoteActivity (int arraysPosition){
-        Intent intent = new Intent(getContext(), NoteActivity.class);
-        intent.putExtra("User Name", currentUser);
+        long id = contentIds.get(arraysPosition);
+        launchNoteActivity(id);
+    }
+
+    private void launchNoteActivity (long id){
+
         //searching for the element in the db, with the id
         Element element = SQLite.select()
                 .from(Element.class)
-                .where(Element_Table.id.is(contentIds.get(arraysPosition)))
+                .where(Element_Table.id.is(id))
                 .querySingle()
                 ;
+        launchNoteActivity(element, null);
+    }
+
+    private void launchNoteActivity(Element element, @Nullable String password){
+        Intent intent = new Intent(getContext(), NoteActivity.class);
         intent.putExtra("Initial Text", element.getContent());
         intent.putExtra("ID", element.getId());
+        intent.putExtra("password", password);
         startActivity(intent);
+
+        //If the element was encrypted, we need to encrypt it again after the user has modified it.
+        if(element.isEncrypted()){
+            //First we look for the salt used to encrypt this element
+            Salt salt = SQLite.select()
+                    .from(Salt.class)
+                    .where(Salt_Table.element_id.is(element.getId()))
+                    .querySingle();
+            //Now let's encrypt the element again.
+            AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt.getSalt());
+            String contents = element.getContent();
+            String cipherText = CryptoUtils.encrypt(contents, key);
+            NoteManager.saveNote(cipherText, element.getId(), true);
+        }
 
         //This is not optimal, but we will keep track of which element the user clicked
         lastClickedElement = element;
     }
 
     private void launchPasswordActivity (int arraysPosition){
-        Intent intent = new Intent(getContext(), PasswordActivity.class);
         long idToSearch = this.contentIds.get(arraysPosition);
-        intent.putExtra("ID", idToSearch);
+        launchPasswordActivity(idToSearch);
+    }
+
+    private void launchPasswordActivity (long id){
+        Intent intent = new Intent(getContext(), PasswordActivity.class);
+        intent.putExtra("ID", id);
 
         //searching for the element in the db, with the id
         Element element = SQLite.select()
                 .from(Element.class)
-                .where(Element_Table.id.is(contentIds.get(arraysPosition)))
+                .where(Element_Table.id.is(id))
                 .querySingle()
                 ;
         lastClickedElement = element;
@@ -291,8 +349,63 @@ public class NotesFragment extends Fragment {
                 //The user did not enter any password and cancelled the operation. We do nothing, since we no longer want to encrypt the note
             }
             //If there is no result code, it means that the user just exited the activity without entering the password
-
         }
     }
 
+    private void promptForPassword(Context context, final Element element){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Enter encryption password");
+
+        // Set up the input
+        final EditText input = new EditText(context);
+        // The input is password type
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String password = input.getText().toString();
+                if(password.equals("")){
+                    Toast.makeText(getContext(), "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                }else{
+                    try{
+                        Element decryptedElement = decryptElement(element, password);
+                        launchNoteActivity(element, password);
+                    }catch(Exception ex){
+                        //Problems during decryption: wrong password or unsupported encoding for the device
+                        Toast.makeText(getContext(), "Wrong password", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    /**
+     * Returns element with contents decrypted. Does not save it in the DB
+     * @param element
+     * @param password
+     * @return
+     */
+    public Element decryptElement(Element element, String password) throws GeneralSecurityException, UnsupportedEncodingException {
+        String ciphertext = element.getContent();
+        String salt = CryptoUtils.retrieveSaltFromElement(element.getId());
+        AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt);
+        String plaintext = CryptoUtils.decrypt(ciphertext, key);
+        Log.d("debug", "Element with id "+element.getId()+ "was decrypted to "+plaintext);
+
+        element.setContent(plaintext);
+        return element;
+    }
 }

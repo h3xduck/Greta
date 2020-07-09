@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -68,8 +69,8 @@ public class PasswordActivity extends AppCompatActivity {
 
                 //This cipherText will be stored now instead of the previous plaintext in the DB
                 //We simply substitute the new contents in our element
-                element.setEncrypted(true);
-                NoteManager.saveNote(cipherText,detectedId);
+                Log.d("debug","Element "+element.getContent()+"is now encrypted as "+cipherText+ "and set as encrypted in the db");
+                NoteManager.saveNote(cipherText,detectedId,true);
 
 
                 //Constructing the result intent, it is sent to the notesFragment

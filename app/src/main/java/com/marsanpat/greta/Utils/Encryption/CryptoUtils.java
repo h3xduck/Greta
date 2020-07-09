@@ -10,6 +10,7 @@ import com.marsanpat.greta.Database.Salt_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 
 import static com.tozny.crypto.android.AesCbcWithIntegrity.generateKeyFromPassword;
@@ -47,33 +48,29 @@ public class CryptoUtils {
         }
     }
 
-    public static String decrypt(String cipherText, AesCbcWithIntegrity.SecretKeys keys){
+    public static String decrypt(String cipherText, AesCbcWithIntegrity.SecretKeys keys) throws UnsupportedEncodingException, GeneralSecurityException{
+        AesCbcWithIntegrity.CipherTextIvMac cipherTextIvMac = new AesCbcWithIntegrity.CipherTextIvMac(cipherText);
+        String plainText = AesCbcWithIntegrity.decryptString(cipherTextIvMac, keys);
+        return plainText;
+    }
+
+    public static String retrieveSaltFromElement(long id) throws NullPointerException{
+        Salt salt = SQLite.select()
+                .from(Salt.class)
+                .where(Salt_Table.element_id.is(id))
+                .querySingle();
+        //Could be null
+        return salt.getSalt();
+    }
+
+    public static AesCbcWithIntegrity.SecretKeys getKeyFromPasswordAndSalt(String password, String salt){
         try{
-            AesCbcWithIntegrity.CipherTextIvMac cipherTextIvMac = new AesCbcWithIntegrity.CipherTextIvMac(cipherText);
-            String plainText = AesCbcWithIntegrity.decryptString(cipherTextIvMac, keys);
-            return plainText;
-        }catch(Exception ex){
+            return generateKeyFromPassword(password, salt);
+        }catch(GeneralSecurityException ex){
             Log.w("debug", ex);
             return null;
         }
     }
-
-    /*public static void storeSalt(String inputSalt, Element element){
-        //Overwrites salt if already exists
-        Salt salt = new Salt();
-        salt.setSalt(inputSalt);
-        salt.setElement(element);
-        salt.save();
-    }
-
-    public static String retrieveSalt(String inputUser){
-        Salt salt = SQLite.select()
-                .from(Salt.class)
-                .where(Salt_Table.user.is(inputUser))
-                .querySingle();
-        //Could be null
-        return salt.getSalt();
-    }*/
 
 
 }

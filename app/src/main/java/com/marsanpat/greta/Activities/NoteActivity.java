@@ -26,9 +26,9 @@ public class NoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
-        String userName = getIntent().getStringExtra("User Name");
         final String startingText = getIntent().getStringExtra("Initial Text");
         final long detectedId = getIntent().getLongExtra("ID", 0);
+        final String encryptionPassword = getIntent().getStringExtra("password");
 
         text = (EditText)findViewById(R.id.inputNote);
         text.setText(startingText);
@@ -39,15 +39,27 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String input = text.getText().toString();
-                if(NoteManager.saveNote(input, detectedId)==-1){
-                    //error
-                    Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
-                            .show();
+                if(encryptionPassword!=null){ //Means we need to encrypt the element later
+                    if(NoteManager.saveNoteAndEncrypt(input, detectedId, encryptionPassword, true)==-1){
+                        //error
+                        Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
+                                .show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
+                                .show();
+                        finish();
+                    }
                 }else{
-                    Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
-                            .show();
-                    finish();
-                };
+                    if(NoteManager.saveNote(input, detectedId, false)==-1){
+                        //error
+                        Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
+                                .show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
+                                .show();
+                        finish();
+                    }
+                }
             }
         });
 
