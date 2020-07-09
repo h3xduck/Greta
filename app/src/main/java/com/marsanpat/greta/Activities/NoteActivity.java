@@ -30,7 +30,6 @@ public class NoteActivity extends AppCompatActivity {
         final String startingText = getIntent().getStringExtra("Initial Text");
         final long detectedId = getIntent().getLongExtra("ID", 0);
 
-        final User user = queryUser(userName);
         text = (EditText)findViewById(R.id.inputNote);
         text.setText(startingText);
 
@@ -40,7 +39,7 @@ public class NoteActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String input = text.getText().toString();
-                if(NoteManager.saveNote(input, user, detectedId)==-1){
+                if(NoteManager.saveNote(input, detectedId)==-1){
                     //error
                     Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
                             .show();
@@ -60,21 +59,6 @@ public class NoteActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public User queryUser(String name){
-        User user = SQLite.select()
-                .from(User.class)
-                .where(User_Table.name.is(name))
-                .querySingle();
-
-        if(user!=null){
-            return user;
-        }else{
-            Log.e("Error","User could not be found");
-            //TODO: throw new UserNotFoundException;
-            return null;
-        }
     }
 
     private String calculatePreview(String txt){

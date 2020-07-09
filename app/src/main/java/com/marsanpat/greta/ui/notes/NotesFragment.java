@@ -1,5 +1,6 @@
 package com.marsanpat.greta.ui.notes;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -76,8 +77,6 @@ public class NotesFragment extends Fragment {
 
         List<Element> elem = SQLite.select()
                 .from(Element.class)
-                //.where(Organization_Table.id.is(1))
-                .where(Element_Table.user_id.is(MainActivity.currentUserId))
                 .queryList();
 
         //Obtaining only the content of the elements in the list
@@ -167,8 +166,7 @@ public class NotesFragment extends Fragment {
                                                 break;
                                             case 2:
                                                 //More Info
-                                                String info = "User: "+toOperate.getUser().getName()+
-                                                        "\nLast Modification: "+toOperate.getLastModification().toString();
+                                                String info = "Last Modification: "+toOperate.getLastModification().toString();
                                                 new AlertDialog.Builder(getContext())
                                                         .setTitle(options[item])
                                                         .setMessage(info)
@@ -177,7 +175,7 @@ public class NotesFragment extends Fragment {
                                             case 3:
                                                 //Encryption
                                                 launchPasswordActivity(position);
-
+                                                break;
                                         }
                                     }
                                 })
@@ -210,24 +208,28 @@ public class NotesFragment extends Fragment {
         lastClickedElement = null;
     }
 
-    private String calculatePreview(String txt){
-        if(txt.contains("\n")){
-            String first = txt.split("\n")[0];
-            if(first.length()>MAXIMUM_PREVIEW_LENGTH){
-                first = first.substring(0,MAXIMUM_PREVIEW_LENGTH-4);
+    private String calculatePreview(String txt, boolean isEncrypted){
+        if(isEncrypted) {
+            return "***********";
+        }else{
+            if (txt.contains("\n")) {
+                String first = txt.split("\n")[0];
+                if (first.length() > MAXIMUM_PREVIEW_LENGTH) {
+                    first = first.substring(0, MAXIMUM_PREVIEW_LENGTH - 4);
+                }
+                return first + "\n...";
             }
-            return first+"\n...";
+            if (txt.length() > MAXIMUM_PREVIEW_LENGTH) {
+                return txt.substring(0, MAXIMUM_PREVIEW_LENGTH - 4) + "...";
+            }
+            return txt;
         }
-        if(txt.length()>MAXIMUM_PREVIEW_LENGTH){
-            return txt.substring(0,MAXIMUM_PREVIEW_LENGTH-4)+"...";
-        }
-        return txt;
     }
 
     private void addToList(Element elem){
         //This adds the element to the string list and updates the adapter.
         //We should consider different ordering methods. For now, let's put the new elements on the top of the list
-        contents.add(0,calculatePreview(elem.getContent()));
+        contents.add(0,calculatePreview(elem.getContent(), elem.isEncrypted()));
         contentIds.add(0,elem.getId());
         try{
             adapter.notifyDataSetChanged();
@@ -238,7 +240,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void removeFromList(Element elem){
-        contents.remove(calculatePreview(elem.getContent()));
+        contents.remove(calculatePreview(elem.getContent(), elem.isEncrypted()));
         contentIds.remove(elem.getId());
         adapter.notifyDataSetChanged();
     }
@@ -264,18 +266,31 @@ public class NotesFragment extends Fragment {
         Intent intent = new Intent(getContext(), PasswordActivity.class);
         long idToSearch = this.contentIds.get(arraysPosition);
         intent.putExtra("ID", idToSearch);
+
+        //searching for the element in the db, with the id
+        Element element = SQLite.select()
+                .from(Element.class)
+                .where(Element_Table.id.is(contentIds.get(arraysPosition)))
+                .querySingle()
+                ;
+        lastClickedElement = element;
         startActivityForResult(intent,1);
     }
 
-    // Call Back method  to get the Message form other Activity
+    // Call Back method
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
         // Result of PasswordActivity
-        if(requestCode==1)
-        {
-            String message=data.getStringExtra("MESSAGE");
+        if(requestCode==1) {
+            if(resultCode == Activity.RESULT_OK){
+
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //The user did not enter any password and cancelled the operation. We do nothing, since we no longer want to encrypt the note
+            }
+            //If there is no result code, it means that the user just exited the activity without entering the password
 
         }
     }

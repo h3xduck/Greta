@@ -44,12 +44,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        //For SQLite
-        final User user = new User();
-        user.setId(0);
-        user.setName(MainActivity.currentUser);
-        user.save();
-
 
         Button insertBut = root.findViewById(R.id.insert);
         insertBut.setOnClickListener(new View.OnClickListener() {
@@ -59,14 +53,12 @@ public class HomeFragment extends Fragment {
                         .setAction("Action", null).show();
                 Element elem = new Element();
                 elem.setContent("Test Yeah");
-                elem.setUser(user);
                 elem.setId(0);
                 elem.setLastModification(new Date(0));
                 elem.save();
 
                 Element elem2 = new Element();
                 elem2.setContent("Test2 Yeah");
-                elem2.setUser(user);
                 elem2.setId(1);
                 elem2.setLastModification(new Date(0));
                 elem2.save();
@@ -95,7 +87,6 @@ public class HomeFragment extends Fragment {
                 if(!input.equals("")){
                     Element elem = new Element();
                     elem.setContent(input);
-                    elem.setUser(user);
                     //Our private key will be an id, corresponding to the time and date of the insertion
                     long time = System.currentTimeMillis();
                     elem.setId(time);

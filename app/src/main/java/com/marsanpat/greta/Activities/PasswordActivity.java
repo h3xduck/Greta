@@ -1,10 +1,8 @@
 package com.marsanpat.greta.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +17,7 @@ import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
-import com.marsanpat.greta.ui.notes.PasswordFragment;
+import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
@@ -52,9 +50,6 @@ public class PasswordActivity extends AppCompatActivity {
                 String password = passwordInput.getText().toString();
                 if(password.equals("")){return;}
 
-                //Constructing the result intent, it is sent to the notesFragment
-                Intent intent = new Intent(getContext(), NoteActivity.class);
-
                 //First, let's generate a good encryption key from the user password.
                 //We receive the key and the salt
                 //TODO ENSURE THE PASSWORD STRENGTH
@@ -73,10 +68,29 @@ public class PasswordActivity extends AppCompatActivity {
 
                 //This cipherText will be stored now instead of the previous plaintext in the DB
                 //We simply substitute the new contents in our element
-                element.setContent(cipherText);
-                element.save();
+                element.setEncrypted(true);
+                NoteManager.saveNote(cipherText,detectedId);
+
+
+                //Constructing the result intent, it is sent to the notesFragment
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_OK);
+                finish();
 
             }
+        });
+
+        Button exit = findViewById(R.id.cancel_button);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Exit activity
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_CANCELED);
+                finish();
+            }
+
+
         });
     }
 

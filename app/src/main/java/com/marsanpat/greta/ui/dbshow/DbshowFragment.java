@@ -55,7 +55,7 @@ public class DbshowFragment extends Fragment {
                         drawElementsDB_keys(root);
                         break;
                     case R.id.radioButtonUsers:
-                        drawElementsDB_users(root);
+                        //Not applicable, we will no longer have multiple users
                         break;
                 }
             }
@@ -81,36 +81,24 @@ public class DbshowFragment extends Fragment {
         includeDBContents_salts(root, mainTable);
     }
 
-    public void drawElementsDB_users(View root){
-        TableLayout mainTable = (TableLayout)root.findViewById(R.id.mainTable);
-        mainTable.removeAllViews();
-        initializeTitleRow_user(root, mainTable);
-        includeDBContents_user(root, mainTable);
-    }
-
     private void initializeTitleRow_element(View root, TableLayout mainTable){
         //This creates dynamically the title row for the mainTable
         TableRow title = new TableRow(this.getContext());
         TextView id = new TextView(this.getContext());
         TextView content = new TextView(this.getContext());
-        TextView user = new TextView(this.getContext());
         TextView lastModification = new TextView(this.getContext());
         id.setText(" ID ");
         id.setBackgroundResource(R.drawable.cell_shape);
         content.setText(" Element ");
         content.setBackgroundResource(R.drawable.cell_shape);
-        user.setText(" User ");
-        user.setBackgroundResource(R.drawable.cell_shape);
         lastModification.setText(" Last Modification ");
         lastModification.setBackgroundResource(R.drawable.cell_shape);
         //Hacky solution to achieve column separation
         id.setPadding(300,0,300,0);
         content.setPadding(300,0,300,0);
-        user.setPadding(300,0,300,0);
         lastModification.setPadding(300,0,300,0);
         title.addView(id);
         title.addView(content);
-        title.addView(user);
         title.addView(lastModification);
 
 
@@ -134,22 +122,6 @@ public class DbshowFragment extends Fragment {
         mainTable.addView(title);
     }
 
-    private void initializeTitleRow_user(View root, TableLayout mainTable){
-        TableRow title = new TableRow(this.getContext());
-        TextView id = new TextView(this.getContext());
-        TextView user = new TextView(this.getContext());
-        id.setText(" ID ");
-        id.setBackgroundResource(R.drawable.cell_shape);
-        user.setText(" USER ");
-        user.setBackgroundResource(R.drawable.cell_shape);
-        //Hacky solution to achieve column separation
-        id.setPadding(300,0,300,0);
-        user.setPadding(300,0,300,0);
-        title.addView(id);
-        title.addView(user);
-        mainTable.addView(title);
-    }
-
 
     private void includeDBContents_element(View root, TableLayout mainTable){
         List<Element> elem = SQLite.select()
@@ -158,8 +130,6 @@ public class DbshowFragment extends Fragment {
         for(int ii=0; ii<elem.size(); ii++){
             String content = elem.get(ii).getContent();
             long resultId = elem.get(ii).getId();
-            User resultUser = elem.get(ii).getUser();
-            String resultUserName = resultUser.getName();
             Date lastModification = elem.get(ii).getLastModification();
             TableRow tr = new TableRow(this.getContext());
             TextView tv = new TextView(this.getContext());
@@ -174,14 +144,9 @@ public class DbshowFragment extends Fragment {
             tr.addView(tv2);
             TextView tv3 = new TextView(this.getContext());
             tv3.setBackgroundResource(R.drawable.cell_shape);
-            tv3.setText(resultUserName);
+            tv3.setText(lastModification.toString());
             //tv3.setGravity(Gravity.CENTER);
             tr.addView(tv3);
-            TextView tv4 = new TextView(this.getContext());
-            tv4.setBackgroundResource(R.drawable.cell_shape);
-            tv4.setText(lastModification.toString());
-            //tv4.setGravity(Gravity.CENTER);
-            tr.addView(tv4);
             mainTable.addView(tr);
         }
     }
@@ -202,28 +167,6 @@ public class DbshowFragment extends Fragment {
             TextView tv2 = new TextView(this.getContext());
             tv2.setBackgroundResource(R.drawable.cell_shape);
             tv2.setText(resultSalt);
-            //tv2.setGravity(Gravity.CENTER);
-            tr.addView(tv2);
-            mainTable.addView(tr);
-        }
-    }
-
-    private void includeDBContents_user(View root, TableLayout mainTable){
-        List<User> elem = SQLite.select()
-                .from(User.class)
-                .queryList();
-        for(int ii=0; ii<elem.size(); ii++){
-            long resultId = elem.get(ii).getId();
-            String resultUserName = elem.get(ii).getName();
-            TableRow tr = new TableRow(this.getContext());
-            TextView tv = new TextView(this.getContext());
-            tv.setBackgroundResource(R.drawable.cell_shape);
-            tv.setText(""+resultId);
-            //tv.setGravity(Gravity.CENTER);
-            tr.addView(tv);
-            TextView tv2 = new TextView(this.getContext());
-            tv2.setBackgroundResource(R.drawable.cell_shape);
-            tv2.setText(resultUserName);
             //tv2.setGravity(Gravity.CENTER);
             tr.addView(tv2);
             mainTable.addView(tr);

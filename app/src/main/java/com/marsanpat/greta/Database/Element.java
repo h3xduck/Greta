@@ -18,15 +18,11 @@ public class Element extends BaseModel {
 
     @Column String content;
 
-    @Column @ForeignKey(saveForeignKeyModel = false)
-    User user;
-
     @Column
     Date lastModification;
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+    @Column
+    boolean encrypted = false;
 
     public void setContent(String content) {
         this.content = content;
@@ -44,15 +40,19 @@ public class Element extends BaseModel {
         return content;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     public Date getLastModification() {
         return lastModification;
     }
 
     public void setLastModification(Date lastModification) {
         this.lastModification = lastModification;
+    }
+
+    public boolean isEncrypted() {
+        return encrypted;
+    }
+
+    public void setEncrypted(boolean encrypted) {
+        this.encrypted = encrypted;
     }
 }
