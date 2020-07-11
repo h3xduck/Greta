@@ -27,7 +27,7 @@ public class NoteManager {
             Element elem = new Element();
             elem.setContent(input);
             if(id==0){
-                Log.d("debug", "saving a new element");
+                Log.d("debug", "saving a NEW element");
                 long time = System.currentTimeMillis();
                 elem.setId(time);
             }else{
@@ -59,7 +59,7 @@ public class NoteManager {
 
             elem.setContent(cipherText);
             if(id==0){
-                Log.d("debug", "saving a new element");
+                Log.d("debug", "saving a NEW element");
                 long time = System.currentTimeMillis();
                 elem.setId(time);
             }else{

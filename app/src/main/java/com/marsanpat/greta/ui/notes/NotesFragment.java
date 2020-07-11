@@ -30,6 +30,7 @@ import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Dialog.DialogManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -39,7 +40,9 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import static com.marsanpat.greta.Activities.MainActivity.currentUser;
 import static com.marsanpat.greta.Utils.Encryption.CryptoUtils.getKeyFromPasswordAndSalt;
@@ -103,12 +106,16 @@ public class NotesFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("debug","Clicked: "+contents.get(position));
+                long selectedElementId = contentIds.get(position);
+                Element selectedElement = Element.searchElement(selectedElementId);
+
+                Log.d("debug","Clicked: "+selectedElementId);
+                rememberLastClickedElement(selectedElement);
 
                 //Two options, the note might be encrypted or not. If it isn't, we launch the activity and let the user modify it. Otherwise we need the password (we only have encrypted garbage)
-                if(Element.isElementEncrypted(contentIds.get(position))){
+                if(Element.isElementEncrypted(selectedElementId)){
                     //Note encrypted
-                    promptForPassword(getContext(),Element.searchElement(contentIds.get(position)));
+                    promptForPassword(getContext(),selectedElement, true);
                 }else{
                     //Note not encrypted
                     launchNoteActivity(position);
@@ -119,91 +126,14 @@ public class NotesFragment extends Fragment {
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                final CharSequence [] options = {"Edit", "Remove", "More Info", "Encrypt this note"};
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Note Options");
-                builder.setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, final int item) { //item is the option selected
-                        //Decide the message depending on the option selected
-                        String message;
-                        switch (item){
-                            case 0:
-                                //Edit
-                                message = "Do you want to edit this note?";
-                                break;
-                            case 1:
-                                //Remove
-                                message = "Are you sure to remove this note?";
-                                break;
-                            case 2:
-                                //More info
-                                message = "Note properties will be displayed";
-                                break;
-                            case 3:
-                                //Encryption
-                                message = "By encrypting this note, a password will be needed for any modification and its visualization";
-                                break;
-                            default:
-                                message = "Not implemented";
-                        }
+                //Get the element to operate with it
+                final long elementId = contentIds.get(position);
+                if(Element.isElementEncrypted(elementId)){
+                    showAlarmDialogForElementWithEncryption(getContext(), elementId);
+                }else{
+                    showAlarmDialogForElementWithoutEncryption(getContext(), elementId);
+                }
 
-                        new AlertDialog.Builder(getContext())
-                                .setTitle(options[item])
-                                .setMessage(message)
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //TODO REMOVE
-                                        Toast.makeText(getContext(),"Cancelled",Toast.LENGTH_SHORT).show();
-                                    }
-                                })
-                                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //TODO CHANGE THIS WITH APPROPRIATE MESSAGE
-                                        Toast.makeText(getContext(),"Accepted",Toast.LENGTH_SHORT).show();
-                                        //Get the element to operate with it
-                                        long id = contentIds.get(position);
-                                        Element toOperate = SQLite.select()
-                                                .from(Element.class)
-                                                .where(Element_Table.id.is(id))
-                                                .querySingle();
-
-                                        switch (item){
-                                            case 0:
-                                                //Edit:
-                                                launchNoteActivity(position);
-                                                break;
-                                            case 1:
-                                                //Remove
-                                                removeFromList(toOperate);
-                                                //Remove the element from the DB too
-                                                SQLite.delete()
-                                                        .from(Element.class)
-                                                        .where(Element_Table.id.is(id))
-                                                        .execute();
-                                                break;
-                                            case 2:
-                                                //More Info
-                                                String info = "Last Modification: "+toOperate.getLastModification().toString();
-                                                new AlertDialog.Builder(getContext())
-                                                        .setTitle(options[item])
-                                                        .setMessage(info)
-                                                        .show();
-                                                break;
-                                            case 3:
-                                                //Encryption
-                                                launchPasswordActivity(position);
-                                                break;
-                                        }
-                                    }
-                                })
-                                .show();
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
 
                 return true; //If you set this to false, the onclick is performed anyways = don't do it
             }
@@ -215,15 +145,18 @@ public class NotesFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if(newElement != null){
+            Log.d("debug", "detected a new element with id "+newElement.getId()+ " and content "+newElement.getContent()+" in the DB");
             //A new element is in the db. This is a hacky but fast and easy way to know which one it is
             if(lastClickedElement!=null){
                 //If we are here, it means that the note is being overwritten.
+                Log.d("debug", "the element with id"+lastClickedElement.getId()+" and content "+lastClickedElement.getContent()+" is being overwritten\n by the element with id "+newElement.getId()+ "and content "+newElement.getId());
                 removeFromList(lastClickedElement);
             }
             addToList(newElement);
-
-            Log.d("debug", "added element");
         }
+        Log.d("debug", "app refreshed, new elements set to null");
+        Log.d("debug", "right now, the IDs on the list are: "+contentIds.toString());
+        Log.d("debug", "and the contents on the list are: "+contents.toString());
         newElement = null;
         lastClickedElement = null;
     }
@@ -264,7 +197,7 @@ public class NotesFragment extends Fragment {
         try{
             adapter.notifyDataSetChanged();
         }catch(NullPointerException ex){
-            //Occurs when OnCreate is called
+            Log.w("debug", "error adding to the list the element with id "+elem.getId());
         }
 
     }
@@ -312,8 +245,7 @@ public class NotesFragment extends Fragment {
             NoteManager.saveNote(cipherText, element.getId(), true);
         }
 
-        //This is not optimal, but we will keep track of which element the user clicked
-        lastClickedElement = element;
+
     }
 
     private void launchPasswordActivity (int arraysPosition){
@@ -331,7 +263,6 @@ public class NotesFragment extends Fragment {
                 .where(Element_Table.id.is(id))
                 .querySingle()
                 ;
-        lastClickedElement = element;
         startActivityForResult(intent,1);
     }
 
@@ -350,9 +281,14 @@ public class NotesFragment extends Fragment {
             }
             //If there is no result code, it means that the user just exited the activity without entering the password
         }
+
+        // Result of NoteActivity
+        if(requestCode==2){
+
+        }
     }
 
-    private void promptForPassword(Context context, final Element element){
+    private void promptForPassword(Context context, final Element element, final boolean keepEncryption){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Enter encryption password");
 
@@ -372,10 +308,17 @@ public class NotesFragment extends Fragment {
                 }else{
                     try{
                         Element decryptedElement = decryptElement(element, password);
-                        launchNoteActivity(element, password);
+                        if(keepEncryption){
+                            //If we are asked to keep the encryption, we must encrypt the note again before saving
+                            launchNoteActivity(decryptedElement, password);
+                        }else{
+                            launchNoteActivity(decryptedElement, null);
+                        }
+
                     }catch(Exception ex){
                         //Problems during decryption: wrong password or unsupported encoding for the device
                         Toast.makeText(getContext(), "Wrong password", Toast.LENGTH_SHORT).show();
+                        //TODO
                     }
                 }
 
@@ -393,7 +336,7 @@ public class NotesFragment extends Fragment {
     }
 
     /**
-     * Returns element with contents decrypted. Does not save it in the DB
+     * Returns an element with contents decrypted. Does not save it in the DB
      * @param element
      * @param password
      * @return
@@ -405,7 +348,127 @@ public class NotesFragment extends Fragment {
         String plaintext = CryptoUtils.decrypt(ciphertext, key);
         Log.d("debug", "Element with id "+element.getId()+ "was decrypted to "+plaintext);
 
-        element.setContent(plaintext);
-        return element;
+        //We return a new element, we do not want to overwrite the one we were given
+        Element elem = new Element();
+        elem.setId(element.getId());
+        elem.setContent(plaintext);
+        elem.setLastModification(element.getLastModification());
+        elem.setEncrypted(false);
+        return elem;
     }
+
+    public void showAlarmDialogForElementWithoutEncryption(final Context context, final long elementId){
+        //The options are different depending on whether the element is encrypted or not
+        CharSequence [] optionsNoteNotEncrypted = {"Edit", "Remove", "More Info", "Encrypt this note"};
+        showAlarmDialogForElement(context, elementId, optionsNoteNotEncrypted, false);
+    }
+
+    public void showAlarmDialogForElementWithEncryption(final Context context, final long elementId) {
+        //The options are different depending on whether the element is encrypted or not
+        CharSequence[] optionsNoteEncrypted = {"Edit", "Remove", "More Info", "Decrypt this note"};
+        showAlarmDialogForElement(context, elementId, optionsNoteEncrypted, true);
+    }
+
+    public void showAlarmDialogForElement(final Context context, final long elementId, final CharSequence[] options, final boolean encrypted){
+        final Element toOperate = SQLite.select()
+                .from(Element.class)
+                .where(Element_Table.id.is(elementId))
+                .querySingle();
+
+        rememberLastClickedElement(toOperate);
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Note Options");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, final int item) { //item is the option selected
+                //Decide the message depending on the option selected
+                String message="";
+                switch (item){
+                    case 0:
+                        //Edit
+                        message = "Do you want to edit this note?";
+                        break;
+                    case 1:
+                        //Remove
+                        message = "Are you sure to remove this note?";
+                        break;
+                    case 2:
+                        //More info
+                        //No need to show any warning
+                        String info = "Last Modification: "+toOperate.getLastModification().toString();
+                        new AlertDialog.Builder(context)
+                                .setTitle(options[item])
+                                .setMessage(info)
+                                .show();
+                        break;
+                    case 3:
+                        //Encryption or decryption
+                        if(encrypted){
+                            message = "This message will be permanently decrypted";
+                        }else{
+                            message = "By encrypting this note, a password will be needed for any modification and its visualization";
+                        }
+                        break;
+                    default:
+                        message = "Not implemented";
+                }
+
+                //Showing the results, if the last dialog was just a warning
+                List<Integer> optionsWithWarnings = Arrays.asList(0,1,3);
+                if(optionsWithWarnings.contains(item)) {
+                    new AlertDialog.Builder(context)
+                            .setTitle(options[item])
+                            .setMessage(message)
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //TODO REMOVE
+                                    Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show();
+                                }
+                            })
+                            .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (item) {
+                                        case 0:
+                                            //Edit:
+                                            launchNoteActivity(elementId);
+                                            break;
+                                        case 1:
+                                            //Remove
+                                            removeFromList(toOperate);
+                                            //Remove the element from the DB too
+                                            SQLite.delete()
+                                                    .from(Element.class)
+                                                    .where(Element_Table.id.is(elementId))
+                                                    .execute();
+                                            break;
+                                        case 3:
+                                            //Encryption or decryption
+                                            if(encrypted){
+                                                //We must save the element decrypted once we get the correct password
+                                                promptForPassword(context, toOperate, false);
+                                            }else{
+                                                //We must save the element encrypted. We ask for a new password
+                                                launchPasswordActivity(elementId);
+                                            }
+                                            break;
+                                    }
+                                }
+                            })
+                            .show();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void rememberLastClickedElement(Element element){
+        //This is not optimal, but we will keep track of which element the user clicked
+        lastClickedElement = element;
+        Log.d("debug", "the last clicked element was "+element.getContent()+" with id "+element.getId());
+    }
+
 }
