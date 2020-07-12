@@ -4,29 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.marsanpat.greta.Database.Element;
-import com.marsanpat.greta.Database.User;
-import com.marsanpat.greta.Database.User_Table;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.marsanpat.greta.ui.notes.NotesFragment;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 
-import java.util.Date;
-
-public class NoteActivity extends AppCompatActivity {
+public class EditNoteActivity extends AppCompatActivity {
     private EditText text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note);
+        setContentView(R.layout.activity_editnote);
         final String startingText = getIntent().getStringExtra("Initial Text");
         final long detectedId = getIntent().getLongExtra("ID", 0);
         final String encryptionPassword = getIntent().getStringExtra("password");

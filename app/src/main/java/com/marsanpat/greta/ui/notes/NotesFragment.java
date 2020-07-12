@@ -20,36 +20,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.marsanpat.greta.Activities.NoteActivity;
+import com.marsanpat.greta.Activities.EditNoteActivity;
 import com.marsanpat.greta.Activities.PasswordActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.R;
-import com.marsanpat.greta.Utils.Dialog.DialogManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import static com.marsanpat.greta.Activities.MainActivity.currentUser;
-import static com.marsanpat.greta.Utils.Encryption.CryptoUtils.getKeyFromPasswordAndSalt;
 
 public class NotesFragment extends Fragment {
 
-    private NotesViewModel notesViewModel;
     private static ArrayAdapter<String> adapter;
     private static ArrayList<String> contents = new ArrayList<>();
     private static List<Long> contentIds = new ArrayList<>();
@@ -60,8 +52,7 @@ public class NotesFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        notesViewModel = ViewModelProviders.of(this).get(NotesViewModel.class);
-        root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        root = inflater.inflate(R.layout.fragment_notes, container, false);
 
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
@@ -69,11 +60,7 @@ public class NotesFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
-                //notificationsUtils.sendNotificationInDefaultChannel("Title of not","Hey Its working",101);
-
-                Intent intent = new Intent(root.getContext(), NoteActivity.class);
+                Intent intent = new Intent(root.getContext(), EditNoteActivity.class);
                 intent.putExtra("User Name", currentUser);
                 intent.putExtra("Initial Text", "");
                 startActivity(intent);
@@ -215,7 +202,7 @@ public class NotesFragment extends Fragment {
     }
 
     private void launchNoteActivity(Element element, @Nullable String password){
-        Intent intent = new Intent(getContext(), NoteActivity.class);
+        Intent intent = new Intent(getContext(), EditNoteActivity.class);
         intent.putExtra("Initial Text", element.getContent());
         intent.putExtra("ID", element.getId());
         intent.putExtra("password", password);
@@ -272,7 +259,7 @@ public class NotesFragment extends Fragment {
             //If there is no result code, it means that the user just exited the activity without entering the password
         }
 
-        // Result of NoteActivity
+        // Result of EditNoteActivity
         if(requestCode==2){
             if(resultCode == Activity.RESULT_OK){
                 refreshListView();

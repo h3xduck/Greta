@@ -3,41 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
-
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="com.marsanpat.greta.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home">
-
-        <action
-            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
-            app:destination="@id/nav_home_second" />
-    </fragment>
-    <fragment
-        android:id="@+id/nav_home_second"
-        android:name="com.marsanpat.greta.ui.home.HomeSecondFragment"
-        android:label="@string/home_second"
-        tools:layout="@layout/fragment_home_second">
-        <action
-            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/nav_home" />
-
-        <argument
-            android:name="myArg"
-            app:argType="string" />
-    </fragment>
+    app:startDestination="@id/nav_gallery">
 
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.marsanpat.greta.ui.notes.NotesFragment"
         android:label="@string/menu_notes"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_notes" >
+        <action
+            android:id="@+id/action_nav_gallery_to_nav_slideshow"
+            app:destination="@id/nav_slideshow" />
+        <action
+            android:id="@+id/action_nav_gallery_to_nav_about"
+            app:destination="@id/nav_about" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.marsanpat.greta.ui.dbshow.DbshowFragment"
         android:label="@string/menu_dbshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_dbshow" >
+        <action
+            android:id="@+id/action_nav_slideshow_to_nav_gallery"
+            app:destination="@id/nav_gallery" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="com.marsanpat.greta.ui.about.AboutFragment"
+        android:label="AboutFragment" />
 </navigation>

@@ -17,7 +17,7 @@
         <activity
             android:name=".Activities.SettingsActivity"
             android:label="@string/title_activity_settings" />
-        <activity android:name=".Activities.NoteActivity" />
+        <activity android:name=".Activities.EditNoteActivity" />
         <activity
             android:name=".Activities.MainActivity"
             android:label="@string/app_name"

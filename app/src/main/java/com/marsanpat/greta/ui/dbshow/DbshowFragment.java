@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Salt;
-import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.R;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -32,7 +31,7 @@ public class DbshowFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         dbshowViewModel =
                 ViewModelProviders.of(this).get(DbshowViewModel.class);
-        final View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
+        final View root = inflater.inflate(R.layout.fragment_dbshow, container, false);
         dbshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
