@@ -115,7 +115,7 @@ public class NotesFragment extends Fragment {
                 //Two options, the note might be encrypted or not. If it isn't, we launch the activity and let the user modify it. Otherwise we need the password (we only have encrypted garbage)
                 if(Element.isElementEncrypted(selectedElementId)){
                     //Note encrypted
-                    promptForPassword(getContext(),selectedElement, true);
+                    promptForPassword(getContext(),selectedElement, true, true);
                 }else{
                     //Note not encrypted
                     launchNoteActivity(position);
@@ -128,12 +128,17 @@ public class NotesFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 //Get the element to operate with it
                 final long elementId = contentIds.get(position);
+                //The options are different depending on whether the element is encrypted or not
+                String [] options;
+                boolean encrypted;
                 if(Element.isElementEncrypted(elementId)){
-                    showAlarmDialogForElementWithEncryption(getContext(), elementId);
+                    options = new String[]{"Edit", "Remove", "More Info", "Decrypt this note"};
+                    encrypted = true;
                 }else{
-                    showAlarmDialogForElementWithoutEncryption(getContext(), elementId);
+                    options = new String[]{"Edit", "Remove", "More Info", "Encrypt this note"};
+                    encrypted = false;
                 }
-
+                showAlarmDialogForElement(getContext(), elementId, options, encrypted);
 
                 return true; //If you set this to false, the onclick is performed anyways = don't do it
             }
@@ -143,24 +148,17 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onResume() {
+        //We need to refresh the list adapter, including new elements, so that the fragment does not need to be re-created in order to show new elements
         super.onResume();
-        if(newElement != null){
-            Log.d("debug", "detected a new element with id "+newElement.getId()+ " and content "+newElement.getContent()+" in the DB");
-            //A new element is in the db. This is a hacky but fast and easy way to know which one it is
-            if(lastClickedElement!=null){
-                //If we are here, it means that the note is being overwritten.
-                Log.d("debug", "the element with id"+lastClickedElement.getId()+" and content "+lastClickedElement.getContent()+" is being overwritten\n by the element with id "+newElement.getId()+ "and content "+newElement.getId());
-                removeFromList(lastClickedElement);
-            }
-            addToList(newElement);
-        }
-        Log.d("debug", "app refreshed, new elements set to null");
-        Log.d("debug", "right now, the IDs on the list are: "+contentIds.toString());
-        Log.d("debug", "and the contents on the list are: "+contents.toString());
-        newElement = null;
-        lastClickedElement = null;
+        refreshListView();
     }
 
+    /**
+     * Calculates preview of the note, which will be shown to the user
+     * @param txt
+     * @param isEncrypted
+     * @return preview of the note
+     */
     private String calculatePreview(String txt, boolean isEncrypted){ 
         String ENCRYPTED_NOTE_PREVIEW = "*************";
         if(isEncrypted) {
@@ -179,14 +177,6 @@ public class NotesFragment extends Fragment {
             }
             return txt;
         }
-    }
-
-    private String calculatePreviewWithID(long id) {
-        Element elem= SQLite.select()
-                .from(Element.class)
-                .where(Element_Table.id.is(id))
-                .querySingle();
-        return calculatePreview(elem.getContent(), elem.isEncrypted());
     }
 
     private void addToList(Element elem){
@@ -229,7 +219,7 @@ public class NotesFragment extends Fragment {
         intent.putExtra("Initial Text", element.getContent());
         intent.putExtra("ID", element.getId());
         intent.putExtra("password", password);
-        startActivity(intent);
+        startActivityForResult(intent,2);
 
         //If the element was encrypted, we need to encrypt it again after the user has modified it.
         if(element.isEncrypted()){
@@ -284,11 +274,13 @@ public class NotesFragment extends Fragment {
 
         // Result of NoteActivity
         if(requestCode==2){
-
+            if(resultCode == Activity.RESULT_OK){
+                refreshListView();
+            }
         }
     }
 
-    private void promptForPassword(Context context, final Element element, final boolean keepEncryption){
+    private void promptForPassword(Context context, final Element element, final boolean keepEncryption, final boolean showNoteActivity){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Enter encryption password");
 
@@ -307,7 +299,15 @@ public class NotesFragment extends Fragment {
                     Toast.makeText(getContext(), "Password cannot be empty", Toast.LENGTH_SHORT).show();
                 }else{
                     try{
-                        Element decryptedElement = decryptElement(element, password);
+                        Element decryptedElement = Element.decryptElement(element, password);
+                        if(!showNoteActivity){
+                            //Happens when the user only wants to decrypt the note, and not to show the note edit activity
+                            NoteManager.saveNote(decryptedElement.getContent(),decryptedElement.getId(),false);
+                            Log.d("debug", "asked not to show the noteactivity");
+                            refreshListView();
+                           return;
+                        }
+
                         if(keepEncryption){
                             //If we are asked to keep the encryption, we must encrypt the note again before saving
                             launchNoteActivity(decryptedElement, password);
@@ -318,7 +318,7 @@ public class NotesFragment extends Fragment {
                     }catch(Exception ex){
                         //Problems during decryption: wrong password or unsupported encoding for the device
                         Toast.makeText(getContext(), "Wrong password", Toast.LENGTH_SHORT).show();
-                        //TODO
+                        //TODO distinguish between the cases
                     }
                 }
 
@@ -335,41 +335,7 @@ public class NotesFragment extends Fragment {
         builder.show();
     }
 
-    /**
-     * Returns an element with contents decrypted. Does not save it in the DB
-     * @param element
-     * @param password
-     * @return
-     */
-    public Element decryptElement(Element element, String password) throws GeneralSecurityException, UnsupportedEncodingException {
-        String ciphertext = element.getContent();
-        String salt = CryptoUtils.retrieveSaltFromElement(element.getId());
-        AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt);
-        String plaintext = CryptoUtils.decrypt(ciphertext, key);
-        Log.d("debug", "Element with id "+element.getId()+ "was decrypted to "+plaintext);
-
-        //We return a new element, we do not want to overwrite the one we were given
-        Element elem = new Element();
-        elem.setId(element.getId());
-        elem.setContent(plaintext);
-        elem.setLastModification(element.getLastModification());
-        elem.setEncrypted(false);
-        return elem;
-    }
-
-    public void showAlarmDialogForElementWithoutEncryption(final Context context, final long elementId){
-        //The options are different depending on whether the element is encrypted or not
-        CharSequence [] optionsNoteNotEncrypted = {"Edit", "Remove", "More Info", "Encrypt this note"};
-        showAlarmDialogForElement(context, elementId, optionsNoteNotEncrypted, false);
-    }
-
-    public void showAlarmDialogForElementWithEncryption(final Context context, final long elementId) {
-        //The options are different depending on whether the element is encrypted or not
-        CharSequence[] optionsNoteEncrypted = {"Edit", "Remove", "More Info", "Decrypt this note"};
-        showAlarmDialogForElement(context, elementId, optionsNoteEncrypted, true);
-    }
-
-    public void showAlarmDialogForElement(final Context context, final long elementId, final CharSequence[] options, final boolean encrypted){
+    public void showAlarmDialogForElement(final Context context, final long elementId, final String[] options, final boolean encrypted){
         final Element toOperate = SQLite.select()
                 .from(Element.class)
                 .where(Element_Table.id.is(elementId))
@@ -448,7 +414,7 @@ public class NotesFragment extends Fragment {
                                             //Encryption or decryption
                                             if(encrypted){
                                                 //We must save the element decrypted once we get the correct password
-                                                promptForPassword(context, toOperate, false);
+                                                promptForPassword(context, toOperate, false, false);
                                             }else{
                                                 //We must save the element encrypted. We ask for a new password
                                                 launchPasswordActivity(elementId);
@@ -469,6 +435,24 @@ public class NotesFragment extends Fragment {
         //This is not optimal, but we will keep track of which element the user clicked
         lastClickedElement = element;
         Log.d("debug", "the last clicked element was "+element.getContent()+" with id "+element.getId());
+    }
+
+    private void refreshListView(){
+        if(newElement != null){
+            Log.d("debug", "detected a new element with id "+newElement.getId()+ " and content "+newElement.getContent()+" in the DB");
+            //A new element is in the db. This is a hacky but fast and easy way to know which one it is
+            if(lastClickedElement!=null){
+                //If we are here, it means that the note is being overwritten.
+                Log.d("debug", "the element with id"+lastClickedElement.getId()+" and content "+lastClickedElement.getContent()+" is being overwritten\n by the element with id "+newElement.getId()+ "and content "+newElement.getId());
+                removeFromList(lastClickedElement);
+            }
+            addToList(newElement);
+        }
+        Log.d("debug", "app refreshed, new elements set to null");
+        Log.d("debug", "right now, the IDs on the list are: "+contentIds.toString());
+        Log.d("debug", "and the contents on the list are: "+contents.toString());
+        newElement = null;
+        lastClickedElement = null;
     }
 
 }

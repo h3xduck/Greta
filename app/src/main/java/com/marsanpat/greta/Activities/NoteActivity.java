@@ -2,6 +2,7 @@ package com.marsanpat.greta.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,6 +58,7 @@ public class NoteActivity extends AppCompatActivity {
                     }else{
                         Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
                                 .show();
+                        setResult(Activity.RESULT_OK);
                         finish();
                     }
                 }
@@ -67,8 +69,8 @@ public class NoteActivity extends AppCompatActivity {
         exitBut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setResult(Activity.RESULT_CANCELED);
                 finish();
-
             }
         });
     }
