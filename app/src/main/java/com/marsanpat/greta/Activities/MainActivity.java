@@ -1,6 +1,7 @@
 package com.marsanpat.greta.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
@@ -25,7 +27,7 @@ import com.raizlabs.android.dbflow.sql.language.Operator;
 
 import static java.lang.Thread.sleep;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        setupSharedPreferences();
     }
 
     @Override
@@ -81,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
         //TODO
         Toast toast = Toast.makeText(this, "Under development", Toast.LENGTH_SHORT);
         toast.show();
-        /*Intent intent = new Intent(this, SettingsActivity.class);
-        this.startActivity(intent);*/
+        Intent intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
     }
 
 
@@ -91,5 +94,25 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private void setupSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals("")) {
+           //TODO here manage the settings
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }

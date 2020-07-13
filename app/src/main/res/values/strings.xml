@@ -15,20 +15,33 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="messages_header">App settings</string>
+    <string name="sync_header">Manage your notes</string>
 
-    <!-- Messages Preferences -->
+    <!-- Settings Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
 
-    <!-- Sync Preferences -->
+    <!-- I&E Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_password">PasswordActivity</string>
+
+
+    <string name="export_note_title">Export notes</string>
+    <string name="export_note_key">export</string>
+
+    <string name="import_note_title">Import notes</string>
+    <string name="import_note_key">import</string>
+
+
+    <string name="resetAllButton_key">resetAll</string>
+    <string name="resetAllButton_title">Reset all notes</string>
+
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>

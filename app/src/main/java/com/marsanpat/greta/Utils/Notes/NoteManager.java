@@ -4,12 +4,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.Database.User;
+import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.ui.notes.NotesFragment;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
@@ -77,4 +81,34 @@ public class NoteManager {
             return -1;
         }
     }
+
+    public static int deleteEverything(){
+        if(deleteAllElements()==-1){
+            return -1;
+        }
+        if(deleteAllSalts()==-1){
+            return -1;
+        }
+
+        return 0;
+    }
+
+    public static int deleteAllSalts(){
+        try{
+            Delete.tables(Salt.class);
+        }catch(Exception ex) {
+            return -1;
+        }
+        return 0;
+    }
+
+    public static int deleteAllElements(){
+        try{
+            Delete.tables(Element.class);
+        }catch(Exception ex) {
+            return -1;
+        }
+        return 0;
+    }
+
 }

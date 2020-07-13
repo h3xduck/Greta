@@ -1,8 +1,9 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/messages_header">
 
-        <EditTextPreference
+        <!--<EditTextPreference
             app:key="signature"
             app:title="@string/signature_title"
             app:useSimpleSummaryProvider="true" />
@@ -13,13 +14,13 @@
             app:entryValues="@array/reply_values"
             app:key="reply"
             app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
+            app:useSimpleSummaryProvider="true" />-->
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/sync_header">
 
-        <SwitchPreferenceCompat
+        <!--<SwitchPreferenceCompat
             app:key="sync"
             app:title="@string/sync_title" />
 
@@ -28,7 +29,19 @@
             app:key="attachment"
             app:summaryOff="@string/attachment_summary_off"
             app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+            app:title="@string/attachment_title" />-->
+
+        <Preference android:title="@string/export_note_title"
+            android:key="@string/export_note_key"
+            android:summary=""/>
+
+        <Preference android:title="@string/import_note_title"
+            android:key="@string/import_note_key"
+            android:summary=""/>
+
+        <Preference android:title="@string/resetAllButton_title"
+            android:key="@string/resetAllButton_key"
+            android:summary=""/>
 
     </PreferenceCategory>
 
