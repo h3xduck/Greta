@@ -386,7 +386,12 @@ public class NotesFragment extends Fragment {
                                     switch (item) {
                                         case 0:
                                             //Edit:
-                                            launchNoteActivity(elementId);
+                                            if(encrypted){
+                                                promptForPassword(context, toOperate, true, true);
+                                            }else{
+                                                launchNoteActivity(elementId);
+                                            }
+
                                             break;
                                         case 1:
                                             //Remove

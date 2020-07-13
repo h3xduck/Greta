@@ -24,7 +24,7 @@ public class AboutFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView githubLink = (TextView) root.findViewById(R.id.tv_telegram);
-        githubLink.setText(Html.fromHtml("<a href=https://github.com/marsan27> My github profile "));
+        githubLink.setText(Html.fromHtml("<a href=https://github.com/marsan27> My github profile :) "));
         githubLink.setMovementMethod(LinkMovementMethod.getInstance());
 
 

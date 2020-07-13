@@ -1,6 +1,7 @@
 package com.marsanpat.greta.ui.dbshow;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,21 +155,26 @@ public class DbshowFragment extends Fragment {
         List<Salt> elem = SQLite.select()
                 .from(Salt.class)
                 .queryList();
-        for(int ii=0; ii<elem.size(); ii++){
-            long referencedElementID = elem.get(ii).getElement().getId();
-            String resultSalt = elem.get(ii).getSalt();
-            TableRow tr = new TableRow(this.getContext());
-            TextView tv = new TextView(this.getContext());
-            tv.setBackgroundResource(R.drawable.cell_shape);
-            tv.setText(String.valueOf(referencedElementID));
-            //tv.setGravity(Gravity.CENTER);
-            tr.addView(tv);
-            TextView tv2 = new TextView(this.getContext());
-            tv2.setBackgroundResource(R.drawable.cell_shape);
-            tv2.setText(resultSalt);
-            //tv2.setGravity(Gravity.CENTER);
-            tr.addView(tv2);
-            mainTable.addView(tr);
+        try{
+            for(int ii=0; ii<elem.size(); ii++){
+                long referencedElementID = elem.get(ii).getElement().getId();
+                String resultSalt = elem.get(ii).getSalt();
+                TableRow tr = new TableRow(this.getContext());
+                TextView tv = new TextView(this.getContext());
+                tv.setBackgroundResource(R.drawable.cell_shape);
+                tv.setText(String.valueOf(referencedElementID));
+                //tv.setGravity(Gravity.CENTER);
+                tr.addView(tv);
+                TextView tv2 = new TextView(this.getContext());
+                tv2.setBackgroundResource(R.drawable.cell_shape);
+                tv2.setText(resultSalt);
+                //tv2.setGravity(Gravity.CENTER);
+                tr.addView(tv2);
+                mainTable.addView(tr);
+            }
+        }catch (Exception ex){
+            Log.d("debug", "empty keys or similar");
         }
+
     }
 }

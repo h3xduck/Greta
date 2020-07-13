@@ -52,13 +52,13 @@
             android:id="@+id/radioButtonKeys"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Keys Table" />
+            android:text="Salts Table" />
 
         <RadioButton
             android:id="@+id/radioButtonUsers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Users table" />
+            android:text="TODO" />
 
     </RadioGroup>
 

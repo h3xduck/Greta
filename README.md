@@ -14,17 +14,18 @@ Once the app is finished, Greta will be integrated into a larger, more ambitious
 * SQLite tables for notes, user and salt (temporary, this will be moved to the android keystore) are created and managed with DBFlow.
 * User can create, view, modify and delete their notes. Long-clicking on a note displays a menu with more options.
 * A fragment showing the SQLite tables was created (for debugging, I might keep it tho).
+* User can encrypt and decrypt the notes, as well as permanently decrypt them. AES with a 128-bit key is used in CBC mode.
+* User can provide a password, for which an encryption key is derived. Different salts are used for each element and stored in the DB.
+ The key is NOT stored in the DB at any moment.
+* Licenses for the third party libraries are shown in an About fragment.
 
 --------------------
 ## TODO
 The full Kanban board will be publicly released once I clean it up. As a summary, Greta still needs to:
 * The app needs ***a lot*** of refactoring. Also many icons and names are the default ones from android studio, it needs to be changed.
-* Encrypt notes before storing them in the DB.
 * Clean the UI, many parts need to be improved and others are just for debugging.
-* Store salt in a secure way.
 * Allow the user to export the notes and also to import them.
 * Include more ~~bugs~~ functionalities, similarly to other notes apps.
-* Add an About page displaying info about the app and libraries licenses (MIT).
 -------------------------
 ## License
 This project is released under the GPL v3 license. See LICENSE.
