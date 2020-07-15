@@ -106,4 +106,9 @@ public class Element extends BaseModel {
         return elem;
     }
 
+    @Override
+    public String toString(){
+        return "Content: "+this.getContent()+"\nID: "+this.getId()+"\nEncrypted?: "+this.isEncrypted()+"\nLastMod: "+this.getLastModification().toString();
+    }
+
 }

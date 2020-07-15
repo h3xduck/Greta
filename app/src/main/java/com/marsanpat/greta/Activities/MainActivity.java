@@ -2,6 +2,7 @@ package com.marsanpat.greta.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private AppBarConfiguration mAppBarConfiguration;
 
     private static final String CHANNEL_ID = "GRETACHANNEL";
+    public static Uri backupFolder; //Default backup folder
 
     public static String currentUser = "Guest";
     public static int currentUserId = 0;
@@ -81,9 +83,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void startSettingsActivity(){
-        //TODO
-        Toast toast = Toast.makeText(this, "Under development", Toast.LENGTH_SHORT);
-        toast.show();
         Intent intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
     }
@@ -99,6 +98,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        //TODO CHANGE THIS ONCE THE SETTING IS CREATED
+        backupFolder =  Uri.fromFile(getExternalFilesDir(null)); //Default backup folder
     }
 
     @Override

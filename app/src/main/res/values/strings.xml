@@ -16,7 +16,7 @@
 
     <!-- Preference Titles -->
     <string name="messages_header">App settings</string>
-    <string name="sync_header">Manage your notes</string>
+    <string name="sync_header">Manage your notes (experimental)</string>
 
     <!-- Settings Preferences -->
     <string name="signature_title">Your signature</string>

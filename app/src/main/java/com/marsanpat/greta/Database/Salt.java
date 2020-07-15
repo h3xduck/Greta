@@ -33,4 +33,9 @@ public class Salt extends BaseModel {
         return this.salt;
     }
 
+    @Override
+    public String toString() {
+        return "Referenced elementID: "+this.getElement()+ "\nSalt: "+this.getSalt();
+    }
+
 }
