@@ -30,6 +30,7 @@ import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Database.DatabaseManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -95,7 +96,8 @@ public class NotesFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long selectedElementId = contentIds.get(position);
-                Element selectedElement = Element.searchElement(selectedElementId);
+                DatabaseManager manager = new DatabaseManager();
+                Element selectedElement = manager.getSingleElement(selectedElementId);;
 
                 Log.d("debug","Clicked: "+selectedElementId);
                 rememberLastClickedElement(selectedElement);
@@ -220,7 +222,8 @@ public class NotesFragment extends Fragment {
             AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt.getSalt());
             String contents = element.getContent();
             String cipherText = CryptoUtils.encrypt(contents, key);
-            NoteManager.saveNote(cipherText, element.getId(), true);
+            NoteManager noteManager = new NoteManager();
+            noteManager.saveNote(cipherText, element.getId(), true);
         }
 
 
@@ -287,10 +290,11 @@ public class NotesFragment extends Fragment {
                     Toast.makeText(getContext(), "Password cannot be empty", Toast.LENGTH_SHORT).show();
                 }else{
                     try{
-                        Element decryptedElement = Element.decryptElement(element, password);
+                        Element decryptedElement = CryptoUtils.decryptElement(element, password);
                         if(!showNoteActivity){
                             //Happens when the user only wants to decrypt the note, and not to show the note edit activity
-                            NoteManager.saveNote(decryptedElement.getContent(),decryptedElement.getId(),false);
+                            NoteManager noteManager = new NoteManager();
+                            noteManager.saveNote(decryptedElement.getContent(),decryptedElement.getId(),false);
                             Log.d("debug", "asked not to show the noteactivity");
                             refreshListView();
                            return;

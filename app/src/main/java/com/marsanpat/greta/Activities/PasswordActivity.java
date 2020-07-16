@@ -70,7 +70,8 @@ public class PasswordActivity extends AppCompatActivity {
                 //This cipherText will be stored now instead of the previous plaintext in the DB
                 //We simply substitute the new contents in our element
                 Log.d("debug","Element "+element.getContent()+"is now encrypted as "+cipherText+ "and set as encrypted in the db");
-                NoteManager.saveNote(cipherText,detectedId,true);
+                NoteManager noteManager = new NoteManager();
+                noteManager.saveNote(cipherText,detectedId,true);
 
 
                 //Constructing the result intent, it is sent to the notesFragment

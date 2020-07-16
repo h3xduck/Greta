@@ -134,7 +134,8 @@ public class SettingsActivity extends AppCompatActivity {
                         .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(NoteManager.deleteEverything()==-1){
+                                NoteManager noteManager = new NoteManager();
+                                if(noteManager.deleteEverything()==-1){
                                     Log.w("debug", "something went wrong while deleting everything");
                                     DialogManager.showApplicationError(getContext(), R.integer.Error_Delete_Everything);
                                 }else{
@@ -273,7 +274,8 @@ public class SettingsActivity extends AppCompatActivity {
             Pair<List<Element>, List<Salt>> backup = manager.extractJSONBackup(jsonString);
 
             //Now we import the lists into the database, after cleaning all the previous ones
-            NoteManager.deleteAllElements();
+            NoteManager noteManager = new NoteManager();
+            noteManager.deleteAllElements();
 
             for(Element elem : backup.first){
                 Log.d("debug", "IMPORTED ELEMENT:\n"+elem.toString());

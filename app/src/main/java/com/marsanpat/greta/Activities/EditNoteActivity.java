@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Dialog.ToastManager;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.marsanpat.greta.ui.notes.NotesFragment;
 
@@ -27,6 +28,8 @@ public class EditNoteActivity extends AppCompatActivity {
         text = (EditText)findViewById(R.id.inputNote);
         text.setText(startingText);
 
+        final NoteManager noteManager = new NoteManager();
+        final ToastManager toastManager = new ToastManager();
         Button saveBut = findViewById(R.id.saveBut);
         saveBut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,23 +37,19 @@ public class EditNoteActivity extends AppCompatActivity {
 
                 String input = text.getText().toString();
                 if(encryptionPassword!=null){ //Means we need to encrypt the element later
-                    if(NoteManager.saveNoteAndEncrypt(input, detectedId, encryptionPassword, true)==-1){
+                    if(noteManager.saveNoteAndEncrypt(input, detectedId, encryptionPassword, true)==-1){
                         //error
-                        Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
-                                .show();
+                        toastManager.showSimpleToast(getApplicationContext(), "Please write something before saving", 1);
                     }else{
-                        Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
-                                .show();
+                        toastManager.showSimpleToast(getApplicationContext(), "Note saved", 1);
                         finish();
                     }
                 }else{
-                    if(NoteManager.saveNote(input, detectedId, false)==-1){
+                    if(noteManager.saveNote(input, detectedId, false)==-1){
                         //error
-                        Toast.makeText(getApplicationContext(), "Please write something before saving", Toast.LENGTH_LONG)
-                                .show();
+                        toastManager.showSimpleToast(getApplicationContext(), "Please write something before saving", 1);
                     }else{
-                        Toast.makeText(getApplicationContext(), "Note saved", Toast.LENGTH_LONG)
-                                .show();
+                        toastManager.showSimpleToast(getApplicationContext(), "Note saved", 1);
                         setResult(Activity.RESULT_OK);
                         finish();
                     }
@@ -67,11 +66,5 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
     }
-
-    private String calculatePreview(String txt){
-        if(txt.length()> NotesFragment.MAXIMUM_PREVIEW_LENGTH){
-            return txt.substring(0,16)+"...";
-        }
-        return txt;
-    }
+    //TODO keep cleaning the classes
 }

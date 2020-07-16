@@ -26,7 +26,7 @@ public class NoteManager {
      * @param id
      * @return 0 on success, -1 on error
      */
-    public static int saveNote(String input, long id, boolean isEncrypted){
+    public int saveNote(String input, long id, boolean isEncrypted){
         if(!input.equals("")){
             Element elem = new Element();
             elem.setContent(input);
@@ -48,7 +48,7 @@ public class NoteManager {
         }
     }
 
-    public static int saveNoteAndEncrypt(String input, long id, String password, boolean isEncrypted){
+    public int saveNoteAndEncrypt(String input, long id, String password, boolean isEncrypted){
         if(!input.equals("")){
             Element elem = new Element();
 
@@ -82,7 +82,7 @@ public class NoteManager {
         }
     }
 
-    public static int deleteEverything(){
+    public int deleteEverything(){
         if(deleteAllElements()==-1){
             return -1;
         }
@@ -93,7 +93,7 @@ public class NoteManager {
         return 0;
     }
 
-    public static int deleteAllSalts(){
+    public int deleteAllSalts(){
         try{
             Delete.tables(Salt.class);
         }catch(Exception ex) {
@@ -102,7 +102,7 @@ public class NoteManager {
         return 0;
     }
 
-    public static int deleteAllElements(){
+    public int deleteAllElements(){
         try{
             Delete.tables(Element.class);
         }catch(Exception ex) {

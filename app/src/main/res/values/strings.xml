@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Greta</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -53,7 +53,7 @@
 
 
     <!-- Licenses -->
-    <string name="dbflow_license">The MIT License (MIT)
+    <string name="dbflow_license" tools:ignore="TypographyOther">The MIT License (MIT)
 
 Copyright (c) 2014 Raizlabs
 
@@ -75,7 +75,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
 
-    <string name="java_aes_crypto_license">The MIT License (MIT)
+    <string name="java_aes_crypto_license" tools:ignore="TypographyOther">The MIT License (MIT)
 
 Copyright (c) 2014-2015 Tozny, LLC; (http://tozny.com)
 
@@ -96,4 +96,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
+
+
+    
 </resources>

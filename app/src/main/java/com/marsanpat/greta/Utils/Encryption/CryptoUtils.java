@@ -48,7 +48,7 @@ public class CryptoUtils {
         }
     }
 
-    public static String decrypt(String cipherText, AesCbcWithIntegrity.SecretKeys keys) throws UnsupportedEncodingException, GeneralSecurityException{
+    public static String decryptCiphertext(String cipherText, AesCbcWithIntegrity.SecretKeys keys) throws UnsupportedEncodingException, GeneralSecurityException{
         AesCbcWithIntegrity.CipherTextIvMac cipherTextIvMac = new AesCbcWithIntegrity.CipherTextIvMac(cipherText);
         String plainText = AesCbcWithIntegrity.decryptString(cipherTextIvMac, keys);
         return plainText;
@@ -72,5 +72,26 @@ public class CryptoUtils {
         }
     }
 
+    /**
+     * Returns an element with contents decrypted. Does not save it in the DB
+     * @param element
+     * @param password
+     * @return
+     */
+    public static Element decryptElement(Element element, String password) throws GeneralSecurityException, UnsupportedEncodingException {
+        String ciphertext = element.getContent();
+        String salt = CryptoUtils.retrieveSaltFromElement(element.getId());
+        AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt);
+        String plaintext = CryptoUtils.decryptCiphertext(ciphertext, key);
+        Log.d("debug", "Element with id "+element.getId()+ "was decrypted to "+plaintext);
+
+        //We return a new element, we do not want to overwrite the one we were given
+        Element elem = new Element();
+        elem.setId(element.getId());
+        elem.setContent(plaintext);
+        elem.setLastModification(element.getLastModification());
+        elem.setEncrypted(false);
+        return elem;
+    }
 
 }
