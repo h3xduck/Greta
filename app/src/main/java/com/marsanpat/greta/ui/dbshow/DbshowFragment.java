@@ -24,6 +24,10 @@ import com.raizlabs.android.dbflow.sql.language.SQLite;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * IMPORTANT: THIS MENU FRAGMENT IS CURRENTLY DEACTIVATED AND MAY BE REWORKED AT SOME POINT.
+ */
 public class DbshowFragment extends Fragment {
 
 

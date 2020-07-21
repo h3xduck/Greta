@@ -25,6 +25,7 @@ public class AboutFragment extends Fragment {
 
         TextView githubLink = (TextView) root.findViewById(R.id.tv_telegram);
         githubLink.setText(Html.fromHtml("<a href=https://github.com/marsan27> My github profile :) "));
+        githubLink.setHighlightColor(getResources().getColor(R.color.colorPrimary));
         githubLink.setMovementMethod(LinkMovementMethod.getInstance());
 
 

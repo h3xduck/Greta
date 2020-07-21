@@ -30,6 +30,9 @@ public class Element extends BaseModel {
     @Column
     boolean encrypted = false;
 
+    //@Column
+    //NoteData noteData = new NoteData();
+
     public void setContent(String content) {
         this.content = content;
     }
@@ -62,6 +65,7 @@ public class Element extends BaseModel {
         this.encrypted = encrypted;
     }
 
+    @Deprecated
     public static boolean isElementEncrypted(long id){
         Element e = SQLite.select()
                 .from(Element.class)
@@ -80,4 +84,11 @@ public class Element extends BaseModel {
         return "Content: "+this.getContent()+"\nID: "+this.getId()+"\nEncrypted?: "+this.isEncrypted()+"\nLastMod: "+this.getLastModification().toString();
     }
 
+    /*public void setNoteData(NoteData noteData) {
+        this.noteData = noteData;
+    }
+
+    public NoteData getNoteData(){
+        return this.noteData;
+    }*/
 }

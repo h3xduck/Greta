@@ -2,6 +2,7 @@ package com.marsanpat.greta.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Dialog.DialogManager;
 import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
 import com.marsanpat.greta.ui.notes.NotesFragment;
 
@@ -42,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_about)
+                R.id.nav_gallery, R.id.nav_about)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -96,9 +98,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        if (key.equals("")) {
-           //TODO here manage the settings once we need tos
+        if (key.equals("colorMode")) {
+            //DialogManager.showSimpleDialog(getBaseContext(), "App mode changed", "Please restart the app to apply changes");
         }
     }
 
@@ -108,4 +109,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
+
+   /* @Override
+    public Resources.Theme getTheme() {
+        Resources.Theme theme = super.getTheme();
+        //Switch to light mode
+        if(PreferenceManager.getDefaultSharedPreferences(this).getBoolean("colorMode", false)){
+            theme.applyStyle(R.style.Theme_AppCompat_Light, true);
+        }
+        // you could also use a switch if you have many themes that could apply
+        return theme;
+    }*/
 }

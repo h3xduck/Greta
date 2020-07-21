@@ -106,6 +106,22 @@
                 android:paddingBottom="20sp"
                 android:text="@string/java_aes_crypto_license"  />
 
+            <TextView
+                android:id="@+id/nononsensefilepicker_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="20sp"
+                android:text="Nononsense FilePicker (File picker)"
+                android:textColor="@color/colorPrimary" />
+
+            <TextView
+                android:id="@+id/nononsensefilepicker_license"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20sp"
+                android:text="@string/nononsensefilepicker_license"  />
+
         </LinearLayout>
 
 

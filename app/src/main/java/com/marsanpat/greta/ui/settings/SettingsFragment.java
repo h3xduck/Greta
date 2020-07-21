@@ -116,6 +116,19 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
             }
         });
+
+        Preference reportIssuesButton = findPreference("reportIssues");
+        reportIssuesButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                String url = "https://github.com/marsan27/Greta/issues";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+                return true;
+
+            }
+        });
     }
 
     @Override

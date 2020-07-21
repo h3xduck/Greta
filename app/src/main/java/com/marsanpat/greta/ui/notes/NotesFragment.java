@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,7 +28,6 @@ import com.marsanpat.greta.Activities.PasswordActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
-import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Database.DatabaseManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
@@ -44,6 +44,7 @@ public class NotesFragment extends Fragment {
     private static ArrayAdapter<String> adapter;
     private static ArrayList<String> contents = new ArrayList<>();
     private static List<Long> contentIds = new ArrayList<>();
+    private static List<Integer> contentColors = new ArrayList<>();
     public static final int MAXIMUM_PREVIEW_LENGTH = 100;
     public static Element newElement = null;
     private static Element lastClickedElement = null;
@@ -169,6 +170,7 @@ public class NotesFragment extends Fragment {
         //We should consider different ordering methods. For now, let's put the new elements on the top of the list
         contents.add(0,calculatePreview(elem.getContent(), elem.isEncrypted()));
         contentIds.add(0,elem.getId());
+        contentColors.add(0, elem.isEncrypted() ? 1 : 0);
         try{
             adapter.notifyDataSetChanged();
         }catch(NullPointerException ex){
@@ -450,10 +452,33 @@ public class NotesFragment extends Fragment {
         //Obtaining only the content of the elements in the list
         contents = new ArrayList<>();
         contentIds = new ArrayList<>();
+        contentColors = new ArrayList<>();
         for(int ii=0; ii<elem.size(); ii++){
             addToList(elem.get(ii));
         }
-        adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents);
+        adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents){
+            @Override
+            //This is to show the encrypted elements in an orange color
+            public View getView(int position, View convertView, ViewGroup parent) {
+
+                View view = super.getView(position, convertView, parent);
+                TextView text = (TextView) view.findViewById(android.R.id.text1);
+
+                //TODO UNDER DEVELOPMENT
+                /*switch (contentColors.get(position)){
+                    case 0:
+                        //Default
+                        break;
+                    case 1:
+                        text.setTextColor(getResources().getColor(R.color.colorPrimary));
+                        break;
+                }*/
+
+
+
+                return view;
+            }
+        };
         lv.setAdapter(adapter);
     }
 

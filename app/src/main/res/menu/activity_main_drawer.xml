@@ -8,10 +8,10 @@
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_notes"
             android:title="@string/menu_notes" />
-        <item
+        <!--DEACTIVATED FOR NOW<item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_dbshow" />
+            android:title="@string/menu_dbshow" />-->
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_about"

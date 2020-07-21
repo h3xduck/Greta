@@ -3,6 +3,10 @@
 
     <PreferenceCategory app:title="@string/messages_header">
 
+        <SwitchPreferenceCompat
+            app:key="colorMode"
+            app:title="@string/colorMode_title" />
+
         <!--<EditTextPreference
             app:key="signature"
             app:title="@string/signature_title"
@@ -42,6 +46,14 @@
         <Preference android:title="@string/resetAllButton_title"
             android:key="@string/resetAllButton_key"
             android:summary=""/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/othersettings_header">
+
+        <Preference android:title="@string/issues_title"
+            android:key="reportIssues"
+            android:summary="@string/issues_subtitle"/>
 
     </PreferenceCategory>
 
