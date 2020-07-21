@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marsanpat.greta.Activities.EditNoteActivity;
@@ -40,8 +39,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.marsanpat.greta.Activities.MainActivity.currentUser;
-
 public class NotesFragment extends Fragment {
 
     private static ArrayAdapter<String> adapter;
@@ -50,12 +47,15 @@ public class NotesFragment extends Fragment {
     public static final int MAXIMUM_PREVIEW_LENGTH = 100;
     public static Element newElement = null;
     private static Element lastClickedElement = null;
+    public static boolean mustIgnoreCache = false;
     private View root;
+    private ListView lv;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.fragment_notes, container, false);
 
+        lv = root.findViewById(R.id.listyView);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
 
@@ -63,7 +63,6 @@ public class NotesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(root.getContext(), EditNoteActivity.class);
-                intent.putExtra("User Name", currentUser);
                 intent.putExtra("Initial Text", "");
                 startActivity(intent);
 
@@ -76,21 +75,10 @@ public class NotesFragment extends Fragment {
 
     private void showResults(View root){
         //Dynamically show stored notes in the db
-        final ListView lv = root.findViewById(R.id.listyView);
-        lv.setClickable(true);
+        this.lv.setClickable(true);
 
-        final List<Element> elem = SQLite.select()
-                .from(Element.class)
-                .queryList();
+        refreshListViewWithNoCache();
 
-        //Obtaining only the content of the elements in the list
-        contents = new ArrayList<>();
-        contentIds = new ArrayList<>();
-        for(int ii=0; ii<elem.size(); ii++){
-            addToList(elem.get(ii));
-        }
-
-        adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -138,9 +126,16 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onResume() {
-        //We need to refresh the list adapter, including new elements, so that the fragment does not need to be re-created in order to show new elements
+        //TODO the app retrieves from the db twice when onCreate is executed. Solve that with a boolean or something.
+        if(mustIgnoreCache){
+            refreshListViewWithNoCache();
+            adapter.notifyDataSetChanged();
+            mustIgnoreCache = false;
+        }else {
+            //We need to refresh the list adapter, including new elements, so that the fragment does not need to be re-created in order to show new elements
+            refreshListViewFromCache();
+        }
         super.onResume();
-        refreshListView();
     }
 
     /**
@@ -196,11 +191,8 @@ public class NotesFragment extends Fragment {
     private void launchNoteActivity (long id){
 
         //searching for the element in the db, with the id
-        Element element = SQLite.select()
-                .from(Element.class)
-                .where(Element_Table.id.is(id))
-                .querySingle()
-                ;
+        DatabaseManager databaseManager = new DatabaseManager();
+        Element element = databaseManager.getSingleElement(id);
         launchNoteActivity(element, null);
     }
 
@@ -214,10 +206,7 @@ public class NotesFragment extends Fragment {
         //If the element was encrypted, we need to encrypt it again after the user has modified it.
         if(element.isEncrypted()){
             //First we look for the salt used to encrypt this element
-            Salt salt = SQLite.select()
-                    .from(Salt.class)
-                    .where(Salt_Table.element_id.is(element.getId()))
-                    .querySingle();
+            Salt salt = new DatabaseManager().getSingleSalt(element.getId());
             //Now let's encrypt the element again.
             AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt.getSalt());
             String contents = element.getContent();
@@ -266,7 +255,7 @@ public class NotesFragment extends Fragment {
         // Result of EditNoteActivity
         if(requestCode==2){
             if(resultCode == Activity.RESULT_OK){
-                refreshListView();
+                refreshListViewFromCache();
             }
         }
     }
@@ -296,7 +285,7 @@ public class NotesFragment extends Fragment {
                             NoteManager noteManager = new NoteManager();
                             noteManager.saveNote(decryptedElement.getContent(),decryptedElement.getId(),false);
                             Log.d("debug", "asked not to show the noteactivity");
-                            refreshListView();
+                            refreshListViewFromCache();
                            return;
                         }
 
@@ -328,10 +317,8 @@ public class NotesFragment extends Fragment {
     }
 
     public void showAlarmDialogForElement(final Context context, final long elementId, final String[] options, final boolean encrypted){
-        final Element toOperate = SQLite.select()
-                .from(Element.class)
-                .where(Element_Table.id.is(elementId))
-                .querySingle();
+        final DatabaseManager databaseManager = new DatabaseManager();
+        final Element toOperate = databaseManager.getSingleElement(elementId);
 
         rememberLastClickedElement(toOperate);
 
@@ -402,10 +389,7 @@ public class NotesFragment extends Fragment {
                                             //Remove
                                             removeFromList(toOperate);
                                             //Remove the element from the DB too
-                                            SQLite.delete()
-                                                    .from(Element.class)
-                                                    .where(Element_Table.id.is(elementId))
-                                                    .execute();
+                                            databaseManager.deleteElement(elementId);
                                             break;
                                         case 3:
                                             //Encryption or decryption
@@ -434,7 +418,10 @@ public class NotesFragment extends Fragment {
         Log.d("debug", "the last clicked element was "+element.getContent()+" with id "+element.getId());
     }
 
-    private void refreshListView(){
+    /**
+     * Refreshes the listView from a "cache", trusting the previous lists. This is faster than reading from the DB
+     */
+    private void refreshListViewFromCache(){
         if(newElement != null){
             Log.d("debug", "detected a new element with id "+newElement.getId()+ " and content "+newElement.getContent()+" in the DB");
             //A new element is in the db. This is a hacky but fast and easy way to know which one it is
@@ -445,11 +432,29 @@ public class NotesFragment extends Fragment {
             }
             addToList(newElement);
         }
-        Log.d("debug", "app refreshed, new elements set to null");
+        Log.d("debug", "app refreshed from cache");
         Log.d("debug", "right now, the IDs on the list are: "+contentIds.toString());
         Log.d("debug", "and the contents on the list are: "+contents.toString());
         newElement = null;
         lastClickedElement = null;
+    }
+
+    /**
+     * Ignores the previous elements in the cache, retrieves information from the DB.
+     */
+    private void refreshListViewWithNoCache(){
+        Log.d("debug", "refreshing view ignoring cache");
+        DatabaseManager databaseManager = new DatabaseManager();
+        final List<Element> elem = databaseManager.getListOfElement();
+
+        //Obtaining only the content of the elements in the list
+        contents = new ArrayList<>();
+        contentIds = new ArrayList<>();
+        for(int ii=0; ii<elem.size(); ii++){
+            addToList(elem.get(ii));
+        }
+        adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents);
+        lv.setAdapter(adapter);
     }
 
 }

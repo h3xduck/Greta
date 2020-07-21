@@ -4,13 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
-import android.widget.Toast;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -24,9 +19,7 @@ import androidx.preference.PreferenceManager;
 
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
-import com.raizlabs.android.dbflow.sql.language.Operator;
-
-import static java.lang.Thread.sleep;
+import com.marsanpat.greta.ui.notes.NotesFragment;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -34,10 +27,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static final String CHANNEL_ID = "GRETACHANNEL";
     public static Uri backupFolder; //Default backup folder
-
-    public static String currentUser = "Guest";
-    public static int currentUserId = 0;
-    public static String UserTempPassword;
 
 
     @Override
@@ -84,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void startSettingsActivity(){
         Intent intent = new Intent(this, SettingsActivity.class);
+        //Since the user may perform some operations which directly affect the fragment, we will refresh it.
+        NotesFragment.mustIgnoreCache = true;
         this.startActivity(intent);
     }
 
@@ -107,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         if (key.equals("")) {
-           //TODO here manage the settings
+           //TODO here manage the settings once we need tos
         }
     }
 

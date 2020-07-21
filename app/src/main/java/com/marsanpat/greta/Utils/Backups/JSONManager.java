@@ -38,13 +38,20 @@ public class JSONManager {
         //Then we export the salts table
         List<Salt> saltsList = SQLite.select().from(Salt.class).queryList();
         JSONArray saltsBackup = new JSONArray();
-        for(int ii = 0; ii<saltsList.size(); ii++) {
-            JSONObject object = new JSONObject();
-            Salt salt = saltsList.get(ii);
-            object.put("ElementID", salt.getElement().getId());
-            object.put("Salt", salt.getSalt());
-            saltsBackup.put(object.toString());
+
+        try{
+            for(int ii = 0; ii<saltsList.size(); ii++) {
+                JSONObject object = new JSONObject();
+                Salt salt = saltsList.get(ii);
+                object.put("ElementID", salt.getElement().getId());
+                object.put("Salt", salt.getSalt());
+                saltsBackup.put(object.toString());
+            }
+        }catch (NullPointerException ex){
+            //No problems here, probably there saltslist is empty because there are no encrypted elements.
+            Log.w("debug", "Something went wrong with the salt for an element..");
         }
+
 
         backup.put("ElementsTable:", elementsBackup);
         backup.put("SaltsTable:", saltsBackup);

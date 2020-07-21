@@ -26,19 +26,10 @@ import java.util.List;
 
 public class DbshowFragment extends Fragment {
 
-    private DbshowViewModel dbshowViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        dbshowViewModel =
-                ViewModelProviders.of(this).get(DbshowViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_dbshow, container, false);
-        dbshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-
-            }
-        });
 
         RadioGroup rg = (RadioGroup) root.findViewById(R.id.radioGroupTable);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()

@@ -17,6 +17,7 @@ import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Database.DatabaseManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -37,10 +38,8 @@ public class PasswordActivity extends AppCompatActivity {
     //This is the id of the element selected by the user to be encrypted
         final long detectedId = getIntent().getLongExtra("ID", 0);
         //And now we get the element from the id
-        final Element element = SQLite.select()
-                .from(Element.class)
-                .where(Element_Table.id.is(detectedId))
-                .querySingle();
+        final DatabaseManager databaseManager = new DatabaseManager();
+        final Element element = databaseManager.getSingleElement(detectedId);
 
         Button accept = findViewById(R.id.button_accept_password);
         accept.setOnClickListener(new View.OnClickListener() {
@@ -58,10 +57,7 @@ public class PasswordActivity extends AppCompatActivity {
 
                 //Now we store the salt
                 //Overwrites salt if already exists
-                Salt salt = new Salt();
-                salt.setSalt(result.second);
-                salt.setElement(element);
-                salt.save();
+                databaseManager.insertSalt(element,result.second);
 
                 //Now we encrypt the element contents
                 String contents = element.getContent();

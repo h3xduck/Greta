@@ -1,4 +1,4 @@
-package com.marsanpat.greta.Activities;
+package com.marsanpat.greta.Database;
 
 import android.app.Application;
 import com.raizlabs.android.dbflow.config.FlowManager;

@@ -16,13 +16,14 @@ public class DatabaseManager {
         element.save();
     }
 
-    public void insertElement(long id, String content, boolean encrypted){
+    public Element insertElement(long id, String content, boolean encrypted){
         Element element = new Element();
         element.setId(id);
         element.setContent(content);
         element.setEncrypted(encrypted);
         element.setLastModification(new Date(System.currentTimeMillis()));
         element.save();
+        return element;
     }
 
     public void deleteElement(long id){
@@ -30,6 +31,11 @@ public class DatabaseManager {
                 .from(Element.class)
                 .where(Element_Table.id.is(id))
                 .execute();
+
+        //We also need to remove any salt of this element, avoiding unnecessary tuples.
+        if(existsSalt(id)){
+            deleteSalt(id);
+        }
     }
 
     public Element getSingleElement(long id){
@@ -101,5 +107,16 @@ public class DatabaseManager {
             return true;
         }
         return false;
+    }
+
+    public void deleteSalt(long idElement){
+        SQLite.delete()
+                .from(Salt.class)
+                .where(Salt_Table.element_id.is(idElement))
+                .execute();
+    }
+
+    public void deleteSalt(Element element){
+        deleteSalt(element.getId());
     }
 }

@@ -11,6 +11,7 @@ import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.Salt_Table;
 import com.marsanpat.greta.Database.User;
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Database.DatabaseManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.ui.notes.NotesFragment;
 import com.raizlabs.android.dbflow.sql.language.Delete;
@@ -28,20 +29,17 @@ public class NoteManager {
      */
     public int saveNote(String input, long id, boolean isEncrypted){
         if(!input.equals("")){
-            Element elem = new Element();
-            elem.setContent(input);
+            DatabaseManager databaseManager = new DatabaseManager();
+            long idToInsert;
             if(id==0){
                 Log.d("debug", "saving a NEW element");
-                long time = System.currentTimeMillis();
-                elem.setId(time);
+                idToInsert = System.currentTimeMillis();
             }else{
-                elem.setId(id);
+                idToInsert = id;
             }
-            elem.setLastModification(new Date(System.currentTimeMillis()));
-            elem.setEncrypted(isEncrypted);
-            elem.save();
-            NotesFragment.newElement = elem;
-            Log.d("debug", "Saved id: "+elem.getId()+ " Content: "+elem.getContent());
+            Element insertedElement = databaseManager.insertElement(idToInsert, input, isEncrypted);
+            NotesFragment.newElement = insertedElement;
+            Log.d("debug", "Saved element: "+insertedElement.toString());
             return 0;
         }else{
             return -1;
@@ -50,32 +48,14 @@ public class NoteManager {
 
     public int saveNoteAndEncrypt(String input, long id, String password, boolean isEncrypted){
         if(!input.equals("")){
-            Element elem = new Element();
-
+            DatabaseManager databaseManager = new DatabaseManager();
             //We encrypt the input before saving
-            Salt salt = SQLite.select()
-                    .from(Salt.class)
-                    .where(Salt_Table.element_id.is(id))
-                    .querySingle();
+            Salt salt = databaseManager.getSingleSalt(id);
             //Now let's encrypt the element again.
             AesCbcWithIntegrity.SecretKeys key = CryptoUtils.getKeyFromPasswordAndSalt(password, salt.getSalt());
             String cipherText = CryptoUtils.encrypt(input, key);
 
-            elem.setContent(cipherText);
-            if(id==0){
-                Log.d("debug", "saving a NEW element");
-                long time = System.currentTimeMillis();
-                elem.setId(time);
-            }else{
-                elem.setId(id);
-            }
-            //We need to update the element which the salt references
-            salt.setElement(elem);
-            elem.setLastModification(new Date(System.currentTimeMillis()));
-            elem.setEncrypted(isEncrypted);
-            elem.save();
-            NotesFragment.newElement = elem;
-            Log.d("debug", "Saved id: "+elem.getId()+ " Content: "+elem.getContent());
+            saveNote(cipherText,id,isEncrypted);
             return 0;
         }else{
             return -1;

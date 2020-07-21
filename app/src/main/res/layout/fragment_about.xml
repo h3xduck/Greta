@@ -47,8 +47,8 @@
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
+                    android:layout_width="136dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/icon_github" />
 
@@ -72,6 +72,7 @@
                 android:paddingTop="50sp"
                 android:text="Third party licenses"
                 android:textSize="30sp" />
+
 
             <TextView
                 android:id="@+id/dbflow_title"
