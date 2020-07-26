@@ -35,10 +35,15 @@ public class NoteManager {
                 Log.d("debug", "saving a NEW element");
                 idToInsert = System.currentTimeMillis();
             }else{
+                //Since it's not new, we must remove it from the list, "overwriting" the element
+                NotesFragment.removeFromList(new DatabaseManager().getSingleElement(id));
                 idToInsert = id;
             }
             Element insertedElement = databaseManager.insertElement(idToInsert, input, isEncrypted);
-            NotesFragment.newElement = insertedElement;
+
+            //We update the list of the notesFragment
+            NotesFragment.addToList(insertedElement);
+
             Log.d("debug", "Saved element: "+insertedElement.toString());
             return 0;
         }else{

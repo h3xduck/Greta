@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
+import com.marsanpat.greta.Views.ScrollableDialogView;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Arrays;
@@ -42,4 +43,11 @@ public class DialogManager {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public void showScrollableDialog(Context context, String title, CharSequence message){
+        ScrollableDialogView dialog = new ScrollableDialogView(context, title, message);
+        dialog.show();
+    }
+
+
 }

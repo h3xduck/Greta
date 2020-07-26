@@ -31,6 +31,7 @@ public class JSONManager {
             object.put("ID", elem.getId());
             object.put("IsEncrypted", elem.isEncrypted());
             object.put("LastMod", elem.getLastModification().getTime());
+            object.put("Priority", elem.getPriority());
             elementsBackup.put(object.toString());
             Log.d("debug", "Exported element: "+object.toString());
         }
@@ -79,6 +80,7 @@ public class JSONManager {
             element.setId(object.getLong("ID"));
             element.setEncrypted(object.getBoolean("IsEncrypted"));
             element.setLastModification(new Date((object.getLong("LastMod"))));
+            element.setPriority(object.getInt("Priority"));
             elementList.add(element);
         }
 

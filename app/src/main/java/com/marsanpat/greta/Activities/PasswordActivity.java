@@ -12,12 +12,14 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Database.DatabaseManager;
+import com.marsanpat.greta.Utils.Dialog.ToastManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -48,7 +50,10 @@ public class PasswordActivity extends AppCompatActivity {
                 //The user clicked to accept that password
                 TextView passwordInput = findViewById(R.id.et_password);
                 String password = passwordInput.getText().toString();
-                if(password.equals("")){return;}
+                if(password.equals("")){
+                    new ToastManager().showSimpleToast(getContext(), "Password cannot be empty", Toast.LENGTH_SHORT);
+                    return;
+                }
 
                 //First, let's generate a good encryption key from the user password.
                 //We receive the key and the salt

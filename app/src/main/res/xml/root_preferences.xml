@@ -3,9 +3,12 @@
 
     <PreferenceCategory app:title="@string/messages_header">
 
-        <SwitchPreferenceCompat
-            app:key="colorMode"
-            app:title="@string/colorMode_title" />
+        <EditTextPreference
+            app:key="encryption_preview"
+            app:title="@string/encryption_preview_title"
+            android:defaultValue="************"
+            android:summary="@string/encryption_preview_summary"
+            android:singleLine="true" />
 
         <!--<EditTextPreference
             app:key="signature"

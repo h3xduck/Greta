@@ -15,12 +15,13 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">App settings (experimental)</string>
+    <string name="messages_header">App settings</string>
     <string name="sync_header">Manage your notes</string>
-    <string name="othersettings_header">Other settings</string>
+    <string name="othersettings_header">Other</string>
 
     <!-- Settings Preferences -->
-    <string name="colorMode_title">Enable Light Mode</string>
+    <string name="encryption_preview_title">Change encrypted notes preview</string>
+    <string name="encryption_preview_summary">Customize what to show instead of \"************\".\nLeave blank for default.</string>
 
     <!-- I&E Preferences -->
     <string name="sync_title">Sync email periodically</string>
@@ -54,8 +55,9 @@
     <string name="message_password_fragment">Please enter your password</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-
+    <string name="about_button_text">Show license</string>
     <!-- Licenses -->
+    <string name="dbflow_title">DbFlow (Database Management)</string>
     <string name="dbflow_license" tools:ignore="TypographyOther">The MIT License (MIT)
 
 Copyright (c) 2014 Raizlabs
@@ -100,7 +102,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
 
-<string name="nononsensefilepicker_license">
+    <string name="nononsensefilepicker_license">
 Mozilla Public License
 Version 2.0
 1. Definitions
@@ -261,5 +263,39 @@ Exhibit B - “Incompatible With Secondary Licenses” Notice
     This Source Code Form is “Incompatible With Secondary Licenses”, as defined by the Mozilla Public License, v. 2.0.
 
 </string>
-    
+    <string name="explanation_button_text">About Greta</string>
+    <string name="explanation_text"><![CDATA[
+    <br></br>
+    <h1>Why yet another notes application?</h1>
+    <p>I am tempted to say that you already know the answer to this question. Go ahead, open Google Play, and search for note management apps.
+     You will be flooded with original, good looking apps. If you are like me, you will quickly discard those including advertisement or with In-App paywalls.
+     But still, if you spent enough time you could end up with some completely free apps.</p>
+     <p>However, we are looking for an app where to write our thoughts and our ideas, and therefore it needs to be worthy of the immense trust we will place on it.
+     Right, we are not writing down state secrets on our mobile phones, but still, you don\'t want your friend to know you need to \"buy X or Y brand of underpants tomorrow\"
+     - then why letting a company track you, analyze your notes/data, and ultimately spy on you?</p>
+     <p>And that is the sad truth about mobile note apps. Most of them are shiny, colorful, well designed honeypots built for naive users or people who think that they have
+     <a href<="https://en.wikipedia.org/wiki/Nothing_to_hide_argument"> nothing to hide </a> when, in the end, this is not even only about privacy, but about the most important property which an app
+     where you will write your personal matters <b>must</b> have.</p>
+
+     <h2>But I found apps that encrypt my notes! They say that, so it must be private!</h2>
+     <p>Exactly, they say that, and that means absolutely nothing. Would you trust that gossiping friend with your secrets? What about an stranger? Because you are doing just that
+     -there is absolutely no proof they are doing what they say-. Maybe they send your notes in plain-text or encryption keys to a remote server every time they are created, or following
+     -unintentionally or not- bad cryptographic practices, or even not applying cryptography at all, simply password protecting your notes in plain-text because of laziness.
+      You should definitely not trust a developer in the Internet more than you would trust a stranger in the streets. </p>
+
+     <p>And this is why I created Greta.</p>
+
+     <h3>I see, but then why should I trust you?</h3>
+     <p>Again, you shouldn\'t. Your notes, your thoughts, are -and must remain- only yours. This app is open-source which means that its source code -the building blocks of the app which
+     define its functionality- are available publicly and everyone can go and check that Greta does what I say it does. It also is free, as in freedom, which means that its users have
+     <a href<=https://www.gnu.org/philosophy/free-sw.en.html>the four essential freedoms</a>. You do not need to trust me because, since the moment you downloaded Greta, it is entirely yours
+     and you don\'t need to take my word for it. Only remember, as the license states, that if you make any modifications to the app you shall release it free and open-source too, so that everyone
+     can benefit of your improvements.</p>
+
+     <p>On the other hand, I am aware of other trustworthy, open-source notes apps out there. Personally, I found the majority of them to include online functionalities which I did not want or other characteristics
+     which I did not like, but I strongly encourage you to search for other open-source apps until you find the one which best fits your needs. I <em>do not obtain any benefit</em> from you downloading
+     this app and in fact I will not even know that you did it, unless you want to <a href<=https://github.com/marsan27>say hi</a>. The only reason I created it was to practice -since I am still studying-, to contribute for once to the great open source community, and to fill a gap which I felt that existed with
+     respect to open source, locally stored, encrypted notes apps. And that last point, the fact that <b>it was built for me</b> and that it\'s not just another app I built to steal user\'s data, is the best that I have to offer.</p>
+]]></string>
+
 </resources>

@@ -7,6 +7,7 @@
     tools:context=".Activities.EditNoteActivity">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="70dp"
@@ -26,22 +27,39 @@
             android:paddingEnd="100dip" />
     </androidx.core.widget.NestedScrollView>
 
-    <Button
-        android:id="@+id/saveBut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
-        android:layout_marginTop="12dp"
-        android:text="Save"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/exitBut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:text="Exit"
-        app:layout_constraintStart_toEndOf="@+id/saveBut"
-        app:layout_constraintTop_toTopOf="@+id/saveBut" />
+        <Button
+            android:id="@+id/saveBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/exitBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:text="Exit" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/nestedScrollView">
+
+        <ImageView
+            android:id="@+id/editnote_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:foregroundGravity="center_vertical|center_horizontal"
+            app:srcCompat="@drawable/ic_open_lock" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,13 +41,9 @@ import java.util.List;
 
 public class NotesFragment extends Fragment {
 
-    private static ArrayAdapter<String> adapter;
-    private static ArrayList<String> contents = new ArrayList<>();
-    private static List<Long> contentIds = new ArrayList<>();
-    private static List<Integer> contentColors = new ArrayList<>();
+    private static ListAdapter adapter;
+    public static ArrayList<Element> contentElements = new ArrayList<>();
     public static final int MAXIMUM_PREVIEW_LENGTH = 100;
-    public static Element newElement = null;
-    private static Element lastClickedElement = null;
     public static boolean mustIgnoreCache = false;
     private View root;
     private ListView lv;
@@ -80,16 +76,14 @@ public class NotesFragment extends Fragment {
 
         refreshListViewWithNoCache();
 
-        lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                long selectedElementId = contentIds.get(position);
+                long selectedElementId = contentElements.get(position).getId();
                 DatabaseManager manager = new DatabaseManager();
                 Element selectedElement = manager.getSingleElement(selectedElementId);;
 
                 Log.d("debug","Clicked: "+selectedElementId);
-                rememberLastClickedElement(selectedElement);
 
                 //Two options, the note might be encrypted or not. If it isn't, we launch the activity and let the user modify it. Otherwise we need the password (we only have encrypted garbage)
                 if(Element.isElementEncrypted(selectedElementId)){
@@ -106,7 +100,7 @@ public class NotesFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 //Get the element to operate with it
-                final long elementId = contentIds.get(position);
+                final long elementId = contentElements.get(position).getId();
                 //The options are different depending on whether the element is encrypted or not
                 String [] options;
                 boolean encrypted;
@@ -123,54 +117,25 @@ public class NotesFragment extends Fragment {
             }
         });
 
+
     }
 
     @Override
     public void onResume() {
-        //TODO the app retrieves from the db twice when onCreate is executed. Solve that with a boolean or something.
         if(mustIgnoreCache){
-            refreshListViewWithNoCache();
-            adapter.notifyDataSetChanged();
+            //When we come back from settingsActivity or other activity which potentially changed a lot of data
+            this.refreshListViewWithNoCache();
             mustIgnoreCache = false;
-        }else {
-            //We need to refresh the list adapter, including new elements, so that the fragment does not need to be re-created in order to show new elements
-            refreshListViewFromCache();
         }
         super.onResume();
     }
 
-    /**
-     * Calculates preview of the note, which will be shown to the user
-     * @param txt
-     * @param isEncrypted
-     * @return preview of the note
-     */
-    private String calculatePreview(String txt, boolean isEncrypted){ 
-        String ENCRYPTED_NOTE_PREVIEW = "*************";
-        if(isEncrypted) {
-            Log.d("debug", "encryption detected on element with content "+txt);
-            return ENCRYPTED_NOTE_PREVIEW;
-        }else{
-            if (txt.contains("\n")) {
-                String first = txt.split("\n")[0];
-                if (first.length() > MAXIMUM_PREVIEW_LENGTH) {
-                    first = first.substring(0, MAXIMUM_PREVIEW_LENGTH - 4);
-                }
-                return first + "\n...";
-            }
-            if (txt.length() > MAXIMUM_PREVIEW_LENGTH) {
-                return txt.substring(0, MAXIMUM_PREVIEW_LENGTH - 4) + "...";
-            }
-            return txt;
-        }
-    }
-
-    private void addToList(Element elem){
+    public static void addToList(Element elem){
         //This adds the element to the string list and updates the adapter.
         //We should consider different ordering methods. For now, let's put the new elements on the top of the list
-        contents.add(0,calculatePreview(elem.getContent(), elem.isEncrypted()));
-        contentIds.add(0,elem.getId());
-        contentColors.add(0, elem.isEncrypted() ? 1 : 0);
+        /////contents.add(0,calculatePreview(elem.getContent(), elem.isEncrypted()));
+        contentElements.add(0,elem);
+        Log.d("debug", "List is now "+contentElements);
         try{
             adapter.notifyDataSetChanged();
         }catch(NullPointerException ex){
@@ -179,17 +144,18 @@ public class NotesFragment extends Fragment {
 
     }
 
-    private void removeFromList(Element elem){
-        contents.remove(calculatePreview(elem.getContent(), elem.isEncrypted()));
-        contentIds.remove(elem.getId());
+    public static void removeFromList(Element elem){
+        contentElements.remove(elem);
         adapter.notifyDataSetChanged();
     }
 
+    @Deprecated
     private void launchNoteActivity (int arraysPosition){
-        long id = contentIds.get(arraysPosition);
-        launchNoteActivity(id);
+        Element elem = contentElements.get(arraysPosition);
+        launchNoteActivity(elem, null);
     }
 
+    @Deprecated
     private void launchNoteActivity (long id){
 
         //searching for the element in the db, with the id
@@ -220,21 +186,12 @@ public class NotesFragment extends Fragment {
 
     }
 
-    private void launchPasswordActivity (int arraysPosition){
-        long idToSearch = this.contentIds.get(arraysPosition);
-        launchPasswordActivity(idToSearch);
-    }
-
-    private void launchPasswordActivity (long id){
+    public void launchPasswordActivity (long id){
         Intent intent = new Intent(getContext(), PasswordActivity.class);
         intent.putExtra("ID", id);
 
         //searching for the element in the db, with the id
-        Element element = SQLite.select()
-                .from(Element.class)
-                .where(Element_Table.id.is(id))
-                .querySingle()
-                ;
+        Element element = new DatabaseManager().getSingleElement(id);
         startActivityForResult(intent,1);
     }
 
@@ -257,12 +214,12 @@ public class NotesFragment extends Fragment {
         // Result of EditNoteActivity
         if(requestCode==2){
             if(resultCode == Activity.RESULT_OK){
-                refreshListViewFromCache();
+
             }
         }
     }
 
-    private void promptForPassword(Context context, final Element element, final boolean keepEncryption, final boolean showNoteActivity){
+    public void promptForPassword(Context context, final Element element, final boolean keepEncryption, final boolean showNoteActivity){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Enter encryption password");
 
@@ -282,12 +239,12 @@ public class NotesFragment extends Fragment {
                 }else{
                     try{
                         Element decryptedElement = CryptoUtils.decryptElement(element, password);
+
                         if(!showNoteActivity){
                             //Happens when the user only wants to decrypt the note, and not to show the note edit activity
                             NoteManager noteManager = new NoteManager();
                             noteManager.saveNote(decryptedElement.getContent(),decryptedElement.getId(),false);
                             Log.d("debug", "asked not to show the noteactivity");
-                            refreshListViewFromCache();
                            return;
                         }
 
@@ -322,7 +279,6 @@ public class NotesFragment extends Fragment {
         final DatabaseManager databaseManager = new DatabaseManager();
         final Element toOperate = databaseManager.getSingleElement(elementId);
 
-        rememberLastClickedElement(toOperate);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Note Options");
@@ -377,6 +333,7 @@ public class NotesFragment extends Fragment {
                             .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    //First we get rid of the old element, independently on what happens
                                     switch (item) {
                                         case 0:
                                             //Edit:
@@ -414,32 +371,6 @@ public class NotesFragment extends Fragment {
         alert.show();
     }
 
-    private void rememberLastClickedElement(Element element){
-        //This is not optimal, but we will keep track of which element the user clicked
-        lastClickedElement = element;
-        Log.d("debug", "the last clicked element was "+element.getContent()+" with id "+element.getId());
-    }
-
-    /**
-     * Refreshes the listView from a "cache", trusting the previous lists. This is faster than reading from the DB
-     */
-    private void refreshListViewFromCache(){
-        if(newElement != null){
-            Log.d("debug", "detected a new element with id "+newElement.getId()+ " and content "+newElement.getContent()+" in the DB");
-            //A new element is in the db. This is a hacky but fast and easy way to know which one it is
-            if(lastClickedElement!=null){
-                //If we are here, it means that the note is being overwritten.
-                Log.d("debug", "the element with id"+lastClickedElement.getId()+" and content "+lastClickedElement.getContent()+" is being overwritten\n by the element with id "+newElement.getId()+ "and content "+newElement.getId());
-                removeFromList(lastClickedElement);
-            }
-            addToList(newElement);
-        }
-        Log.d("debug", "app refreshed from cache");
-        Log.d("debug", "right now, the IDs on the list are: "+contentIds.toString());
-        Log.d("debug", "and the contents on the list are: "+contents.toString());
-        newElement = null;
-        lastClickedElement = null;
-    }
 
     /**
      * Ignores the previous elements in the cache, retrieves information from the DB.
@@ -450,35 +381,12 @@ public class NotesFragment extends Fragment {
         final List<Element> elem = databaseManager.getListOfElement();
 
         //Obtaining only the content of the elements in the list
-        contents = new ArrayList<>();
-        contentIds = new ArrayList<>();
-        contentColors = new ArrayList<>();
+        contentElements = new ArrayList<>();
         for(int ii=0; ii<elem.size(); ii++){
             addToList(elem.get(ii));
         }
-        adapter = new ArrayAdapter<String>(root.getContext(),android.R.layout.simple_list_item_1, contents){
-            @Override
-            //This is to show the encrypted elements in an orange color
-            public View getView(int position, View convertView, ViewGroup parent) {
+        adapter = new ListAdapter(getContext(), contentElements, this);
 
-                View view = super.getView(position, convertView, parent);
-                TextView text = (TextView) view.findViewById(android.R.id.text1);
-
-                //TODO UNDER DEVELOPMENT
-                /*switch (contentColors.get(position)){
-                    case 0:
-                        //Default
-                        break;
-                    case 1:
-                        text.setTextColor(getResources().getColor(R.color.colorPrimary));
-                        break;
-                }*/
-
-
-
-                return view;
-            }
-        };
         lv.setAdapter(adapter);
     }
 

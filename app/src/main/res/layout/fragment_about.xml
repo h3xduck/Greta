@@ -49,7 +49,7 @@
                     android:id="@+id/imageView2"
                     android:layout_width="136dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_weight="1.0"
                     android:src="@drawable/icon_github" />
 
                 <TextView
@@ -57,12 +57,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="center"
+                    android:layout_weight="1.0"
                     android:text="marsan27"
                     android:textColor="@color/colorPrimary" />
 
             </LinearLayout>
+
+
+            <Button
+                android:id="@+id/explanation_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/explanation_button_text" />
 
             <TextView
                 android:id="@+id/libraries_title"
@@ -73,25 +79,23 @@
                 android:text="Third party licenses"
                 android:textSize="30sp" />
 
-
             <TextView
                 android:id="@+id/dbflow_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingTop="20sp"
-                android:text="DbFlow (Database Management)"
+                android:text="@string/dbflow_title"
                 android:textColor="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/dbflow_license"
+            <Button
+                android:id="@+id/dbflow_licenseButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20sp"
-                android:text="@string/dbflow_license" />
+                android:text="@string/about_button_text" />
 
             <TextView
-                android:id="@+id/java-aes-crypto_title"
+                android:id="@+id/javaaescrypto_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -99,12 +103,11 @@
                 android:text="java-aes-cryto (Notes Encryption)"
                 android:textColor="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/java-aes-crypto_license"
+            <Button
+                android:id="@+id/javaaescrypto_licenseButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20sp"
-                android:text="@string/java_aes_crypto_license"  />
+                android:text="@string/about_button_text" />
 
             <TextView
                 android:id="@+id/nononsensefilepicker_title"
@@ -115,12 +118,11 @@
                 android:text="Nononsense FilePicker (File picker)"
                 android:textColor="@color/colorPrimary" />
 
-            <TextView
-                android:id="@+id/nononsensefilepicker_license"
+            <Button
+                android:id="@+id/nononsensefilepicker_licenseButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="20sp"
-                android:text="@string/nononsensefilepicker_license"  />
+                android:text="@string/about_button_text" />
 
         </LinearLayout>
 

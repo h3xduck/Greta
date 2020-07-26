@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Dialog.DialogManager;
 
 public class AboutFragment extends Fragment {
 
@@ -24,11 +26,45 @@ public class AboutFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView githubLink = (TextView) root.findViewById(R.id.tv_telegram);
-        githubLink.setText(Html.fromHtml("<a href=https://github.com/marsan27> My github profile :) "));
+        githubLink.setText(Html.fromHtml("<a href=https://github.com/marsan27> Contact me on github :) "));
         githubLink.setHighlightColor(getResources().getColor(R.color.colorPrimary));
         githubLink.setMovementMethod(LinkMovementMethod.getInstance());
 
+        Button dbflowLicenseButton = root.findViewById(R.id.dbflow_licenseButton);
+        dbflowLicenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogManager dialogManager = new DialogManager();
+                dialogManager.showScrollableDialog(getContext(), "MIT License", getResources().getString(R.string.dbflow_license));
+            }
+        });
 
+        Button javaaescryptoLicenseButton = root.findViewById(R.id.javaaescrypto_licenseButton);
+        javaaescryptoLicenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogManager dialogManager = new DialogManager();
+                dialogManager.showScrollableDialog(getContext(), "MIT License", getResources().getString(R.string.java_aes_crypto_license));
+            }
+        });
+
+        Button nononsenseFilePickerLicenseButton = root.findViewById(R.id.nononsensefilepicker_licenseButton);
+        nononsenseFilePickerLicenseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogManager dialogManager = new DialogManager();
+                dialogManager.showScrollableDialog(getContext(), "Mozilla Public License 2.0", getResources().getString(R.string.nononsensefilepicker_license));
+            }
+        });
+
+        Button explanationButton = root.findViewById(R.id.explanation_button);
+        explanationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogManager dialogManager = new DialogManager();
+                dialogManager.showScrollableDialog(getContext(), getResources().getString(R.string.explanation_button_text),  Html.fromHtml(getResources().getString(R.string.explanation_text)));
+            }
+        });
 
 
         return root;

@@ -2,9 +2,9 @@ package com.marsanpat.greta.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
 import com.google.android.material.navigation.NavigationView;
@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.preference.PreferenceManager;
 
 import com.marsanpat.greta.R;
-import com.marsanpat.greta.Utils.Dialog.DialogManager;
 import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
 import com.marsanpat.greta.ui.notes.NotesFragment;
 
@@ -29,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private static final String CHANNEL_ID = "GRETACHANNEL";
     public static Uri backupFolder; //Default backup folder
+    public static String ENCRYPTED_NOTE_PREVIEW;
 
 
     @Override
@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         NavigationUI.setupWithNavController(navigationView, navController);
 
         setupSharedPreferences();
+        //startWelcomeActivity();
+
     }
 
     @Override
@@ -80,6 +82,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         this.startActivity(intent);
     }
 
+    private void startWelcomeActivity(){
+        Intent intent = new Intent(this, WelcomeActivity.class);
+        this.startActivity(intent);
+    }
+
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -92,14 +99,23 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        ENCRYPTED_NOTE_PREVIEW = sharedPreferences.getString("encryption_preview", "************");
+
+        if(ENCRYPTED_NOTE_PREVIEW.equals("")){
+            ENCRYPTED_NOTE_PREVIEW="************";
+        }
         //TODO CHANGE THIS ONCE THE SETTING IS CREATED
         backupFolder =  Uri.fromFile(getExternalFilesDir(null)); //Default backup folder
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("colorMode")) {
-            //DialogManager.showSimpleDialog(getBaseContext(), "App mode changed", "Please restart the app to apply changes");
+        if (key.equals("encryption_preview")) {
+            Log.d("debug", "encrypt_preview preference changed");
+            ENCRYPTED_NOTE_PREVIEW = sharedPreferences.getString("encryption_preview", "*********");
+            if(ENCRYPTED_NOTE_PREVIEW.equals("")){
+                ENCRYPTED_NOTE_PREVIEW="************";
+            }
         }
     }
 

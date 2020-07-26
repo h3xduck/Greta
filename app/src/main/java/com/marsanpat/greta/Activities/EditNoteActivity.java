@@ -3,10 +3,12 @@ package com.marsanpat.greta.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.marsanpat.greta.R;
@@ -25,6 +27,17 @@ public class EditNoteActivity extends AppCompatActivity {
         final long detectedId = getIntent().getLongExtra("ID", 0);
         final String encryptionPassword = getIntent().getStringExtra("password");
 
+        //If the note is encrypted, we show an image of a locked lock, otherwise we show an open lock
+        //By default it is an open lock, we just change it otherwise
+        ImageView lockImage = (ImageView)findViewById(R.id.editnote_background);
+        if(encryptionPassword!=null){
+            lockImage.setImageResource(R.drawable.ic_lock_locked);
+        }
+        //We make the image a bit more transparent, so that it does not interfere with written text
+        //Keep in mind max is 255
+        lockImage.setImageAlpha(60);
+
+
         text = (EditText)findViewById(R.id.inputNote);
         text.setText(startingText);
 
@@ -42,6 +55,8 @@ public class EditNoteActivity extends AppCompatActivity {
                         toastManager.showSimpleToast(getApplicationContext(), "Please write something before saving", 1);
                     }else{
                         toastManager.showSimpleToast(getApplicationContext(), "Note saved", 1);
+
+                        setResult(Activity.RESULT_OK);
                         finish();
                     }
                 }else{
@@ -50,6 +65,7 @@ public class EditNoteActivity extends AppCompatActivity {
                         toastManager.showSimpleToast(getApplicationContext(), "Please write something before saving", 1);
                     }else{
                         toastManager.showSimpleToast(getApplicationContext(), "Note saved", 1);
+
                         setResult(Activity.RESULT_OK);
                         finish();
                     }
@@ -66,5 +82,4 @@ public class EditNoteActivity extends AppCompatActivity {
             }
         });
     }
-    //TODO keep cleaning the classes
 }

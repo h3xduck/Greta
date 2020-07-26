@@ -30,8 +30,8 @@ public class Element extends BaseModel {
     @Column
     boolean encrypted = false;
 
-    //@Column
-    //NoteData noteData = new NoteData();
+    @Column
+    int priority = 0; //by default
 
     public void setContent(String content) {
         this.content = content;
@@ -65,6 +65,14 @@ public class Element extends BaseModel {
         this.encrypted = encrypted;
     }
 
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
     @Deprecated
     public static boolean isElementEncrypted(long id){
         Element e = SQLite.select()
@@ -81,7 +89,8 @@ public class Element extends BaseModel {
 
     @Override
     public String toString(){
-        return "Content: "+this.getContent()+"\nID: "+this.getId()+"\nEncrypted?: "+this.isEncrypted()+"\nLastMod: "+this.getLastModification().toString();
+        return "Content: "+this.getContent()+"\nID: "+this.getId()+"\nEncrypted?: "+this.isEncrypted()+"\nLastMod: "+this.getLastModification().toString()
+                +"\nPriority: "+this.priority+"\n";
     }
 
     /*public void setNoteData(NoteData noteData) {
@@ -91,4 +100,13 @@ public class Element extends BaseModel {
     public NoteData getNoteData(){
         return this.noteData;
     }*/
+
+    public boolean equals(Object object){
+        if (object == null) return false;
+        if (object == this) return true;
+        if (!(object instanceof Element)) return false;
+        Element element = (Element) object;
+        return ((Element) object).getId() == this.getId();
+
+    }
 }
