@@ -11,32 +11,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.marsanpat.greta.Activities.EditNoteActivity;
+import com.marsanpat.greta.Activities.MainActivity;
 import com.marsanpat.greta.Activities.PasswordActivity;
 import com.marsanpat.greta.Database.Element;
-import com.marsanpat.greta.Database.Element_Table;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Database.DatabaseManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class NotesFragment extends Fragment {
@@ -130,12 +129,31 @@ public class NotesFragment extends Fragment {
         super.onResume();
     }
 
+
     public static void addToList(Element elem){
         //This adds the element to the string list and updates the adapter.
-        //We should consider different ordering methods. For now, let's put the new elements on the top of the list
-        /////contents.add(0,calculatePreview(elem.getContent(), elem.isEncrypted()));
         contentElements.add(0,elem);
-        Log.d("debug", "List is now "+contentElements);
+
+        //Depending on the type of ordering which the user selected, we need to perform different sortings
+        switch(MainActivity.NOTES_ORDER_METHOD){
+            case "date_nto":
+                Collections.sort(contentElements, new DateComparator());
+                Collections.reverse(contentElements);
+                break;
+            case "date_otn":
+                Collections.sort(contentElements, new DateComparator());
+                break;
+            case "importance_htl":
+                Collections.sort(contentElements, new PriorityComparator());
+                Collections.reverse(contentElements);
+                break;
+            case "importance_lth":
+                Collections.sort(contentElements, new PriorityComparator());
+                break;
+        }
+
+
+        //Log.d("debug", "List is now "+contentElements);
         try{
             adapter.notifyDataSetChanged();
         }catch(NullPointerException ex){

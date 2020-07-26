@@ -18,11 +18,14 @@
     <string name="messages_header">App settings</string>
     <string name="sync_header">Manage your notes</string>
     <string name="othersettings_header">Other</string>
+    <string name="disableDelete_title">Disable fast delete button</string>
+    <string name="disableDelete_summary">Recycle bin button won\'t delete notes</string>
 
     <!-- Settings Preferences -->
     <string name="encryption_preview_title">Change encrypted notes preview</string>
     <string name="encryption_preview_summary">Customize what to show instead of \"************\".\nLeave blank for default.</string>
 
+    <string name="order_title">Order notes by…</string>
     <!-- I&E Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>

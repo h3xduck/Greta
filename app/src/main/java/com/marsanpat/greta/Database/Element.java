@@ -12,6 +12,7 @@ import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -109,4 +110,6 @@ public class Element extends BaseModel {
         return ((Element) object).getId() == this.getId();
 
     }
+
 }
+

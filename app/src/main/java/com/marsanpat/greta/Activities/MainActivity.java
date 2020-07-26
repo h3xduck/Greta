@@ -26,9 +26,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private AppBarConfiguration mAppBarConfiguration;
 
+    //APP PUBLIC PREFERENCES
     private static final String CHANNEL_ID = "GRETACHANNEL";
     public static Uri backupFolder; //Default backup folder
     public static String ENCRYPTED_NOTE_PREVIEW;
+    public static String NOTES_ORDER_METHOD;
+    public static boolean RECYCLE_BIN_BUTTON_DEACTIVATED = false;
 
 
     @Override
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         ENCRYPTED_NOTE_PREVIEW = sharedPreferences.getString("encryption_preview", "************");
+        NOTES_ORDER_METHOD = sharedPreferences.getString("order", "date_nto");
+        RECYCLE_BIN_BUTTON_DEACTIVATED = sharedPreferences.getBoolean("disable_delete", false);
 
         if(ENCRYPTED_NOTE_PREVIEW.equals("")){
             ENCRYPTED_NOTE_PREVIEW="************";
@@ -116,6 +121,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             if(ENCRYPTED_NOTE_PREVIEW.equals("")){
                 ENCRYPTED_NOTE_PREVIEW="************";
             }
+        }else if(key.equals("order")){
+            Log.d("debug", "order preference changed");
+            NOTES_ORDER_METHOD = sharedPreferences.getString("order", "date_nto");
+        }else if(key.equals("disable_delete")){
+            Log.d("debug", "delete icon preference changed");
+            RECYCLE_BIN_BUTTON_DEACTIVATED = sharedPreferences.getBoolean("disable_delete", false);
         }
     }
 

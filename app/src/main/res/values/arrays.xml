@@ -1,12 +1,16 @@
 <resources>
     <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="order_entries">
+        <item>Date (newest to oldest)</item>
+        <item>Date (oldest to newest)</item>
+        <item>Importance (highest to lowest)</item>
+        <item>Importance (lowest to highest)</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="order_values">
+        <item>date_nto</item>
+        <item>date_otn</item>
+        <item>importance_htl</item>
+        <item>importance_lth</item>
     </string-array>
 </resources>

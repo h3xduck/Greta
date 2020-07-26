@@ -10,18 +10,17 @@
             android:summary="@string/encryption_preview_summary"
             android:singleLine="true" />
 
-        <!--<EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+        <ListPreference
+            app:defaultValue="Date (newest to oldest)"
+            app:entries="@array/order_entries"
+            app:entryValues="@array/order_values"
+            app:key="order"
+            app:title="@string/order_title"
             app:useSimpleSummaryProvider="true" />
 
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />-->
+        <SwitchPreferenceCompat android:title="@string/disableDelete_title"
+            android:key="disable_delete"
+            android:summary="@string/disableDelete_summary"/>
 
     </PreferenceCategory>
 

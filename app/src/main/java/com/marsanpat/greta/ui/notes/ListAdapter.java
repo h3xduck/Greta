@@ -81,6 +81,9 @@ public class ListAdapter extends BaseAdapter {
         imageButton.setFocusableInTouchMode(false);
         deleteButton.setFocusableInTouchMode(false);
 
+        if(MainActivity.RECYCLE_BIN_BUTTON_DEACTIVATED){
+            deleteButton.setVisibility(View.GONE);
+        }
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
