@@ -31,15 +31,19 @@ public class NoteManager {
         if(!input.equals("")){
             DatabaseManager databaseManager = new DatabaseManager();
             long idToInsert;
+            int elementPriority;
             if(id==0){
                 Log.d("debug", "saving a NEW element");
                 idToInsert = System.currentTimeMillis();
+                elementPriority = 0;
             }else{
-                //Since it's not new, we must remove it from the list, "overwriting" the element
-                NotesFragment.removeFromList(new DatabaseManager().getSingleElement(id));
+                //Since it's not new, we must remove it from the list, "overwriting" the element from the db (no need to delete it)
+                Element oldElement = databaseManager.getSingleElement(id);
+                NotesFragment.removeFromList(oldElement);
                 idToInsert = id;
+                elementPriority = oldElement.getPriority();
             }
-            Element insertedElement = databaseManager.insertElement(idToInsert, input, isEncrypted);
+            Element insertedElement = databaseManager.insertElement(idToInsert, input, isEncrypted, elementPriority);
 
             //We update the list of the notesFragment
             NotesFragment.addToList(insertedElement);

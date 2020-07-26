@@ -3,6 +3,7 @@ package com.marsanpat.greta.ui.notes;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,27 +84,36 @@ public class ListAdapter extends BaseAdapter {
 
         if(MainActivity.RECYCLE_BIN_BUTTON_DEACTIVATED){
             deleteButton.setVisibility(View.GONE);
+        }else{
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Are you sure you want to remove this note?");
+                    builder.setMessage("This action cannot be undo");
+                    builder.setNegativeButton("Cancel", null );
+                    builder.setPositiveButton("Accept", new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            NotesFragment.removeFromList(element);
+                            new DatabaseManager().deleteElement(element.getId());
+                        }
+                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+
+                }
+            });
         }
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Are you sure you want to remove this note?");
-                builder.setMessage("This action cannot be undo");
-                builder.setNegativeButton("Cancel", null );
-                builder.setPositiveButton("Accept", new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        NotesFragment.removeFromList(element);
-                        new DatabaseManager().deleteElement(element.getId());
-                    }
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+        //Change background if element is important
+        if(element.getPriority()>0){
+            convertView.setBackgroundColor(context.getResources().getColor(R.color.colorImportantLevel1));
+        }else{
+            convertView.setBackgroundColor(Color.TRANSPARENT);
+        }
 
-            }
-        });
+
 
 
         return convertView;

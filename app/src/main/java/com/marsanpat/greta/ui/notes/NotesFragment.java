@@ -29,6 +29,7 @@ import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Database.DatabaseManager;
+import com.marsanpat.greta.Utils.Dialog.DialogManager;
 import com.marsanpat.greta.Utils.Encryption.CryptoUtils;
 import com.marsanpat.greta.Utils.Notes.NoteManager;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
@@ -99,15 +100,17 @@ public class NotesFragment extends Fragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 //Get the element to operate with it
-                final long elementId = contentElements.get(position).getId();
+                final Element element = contentElements.get(position);
+                final long elementId = element.getId();
                 //The options are different depending on whether the element is encrypted or not
                 String [] options;
                 boolean encrypted;
-                if(Element.isElementEncrypted(elementId)){
-                    options = new String[]{"Edit", "Remove", "More Info", "Decrypt this note"};
+                String favouriteOption = element.getPriority()==0 ? "Mark as favourite" : "Remove from favourites";
+                if(element.isEncrypted()){
+                    options = new String[]{"Edit", "Remove", "More Info", "Decrypt this note", favouriteOption};
                     encrypted = true;
                 }else{
-                    options = new String[]{"Edit", "Remove", "More Info", "Encrypt this note"};
+                    options = new String[]{"Edit", "Remove", "More Info", "Encrypt this note", favouriteOption};
                     encrypted = false;
                 }
                 showAlarmDialogForElement(getContext(), elementId, options, encrypted);
@@ -294,10 +297,6 @@ public class NotesFragment extends Fragment {
     }
 
     public void showAlarmDialogForElement(final Context context, final long elementId, final String[] options, final boolean encrypted){
-        final DatabaseManager databaseManager = new DatabaseManager();
-        final Element toOperate = databaseManager.getSingleElement(elementId);
-
-
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Note Options");
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -305,6 +304,8 @@ public class NotesFragment extends Fragment {
             public void onClick(DialogInterface dialog, final int item) { //item is the option selected
                 //Decide the message depending on the option selected
                 String message="";
+                final DatabaseManager databaseManager = new DatabaseManager();
+                final Element toOperate = databaseManager.getSingleElement(elementId);
                 switch (item){
                     case 0:
                         //Edit
@@ -318,10 +319,7 @@ public class NotesFragment extends Fragment {
                         //More info
                         //No need to show any warning
                         String info = "Last Modification: "+toOperate.getLastModification().toString();
-                        new AlertDialog.Builder(context)
-                                .setTitle(options[item])
-                                .setMessage(info)
-                                .show();
+                        DialogManager.showSimpleDialog(context,options[item],info);
                         break;
                     case 3:
                         //Encryption or decryption
@@ -330,6 +328,20 @@ public class NotesFragment extends Fragment {
                         }else{
                             message = "By encrypting this note, a password will be needed for any modification and its visualization";
                         }
+                        break;
+                    case 4:
+                        //Mark as important or not
+                        //No need to show any warning
+                        removeFromList(toOperate);
+                        if(toOperate.getPriority()>0){
+                            toOperate.setPriority(0); //Deselect from favourites
+                        }else{
+                            toOperate.setPriority(1); //Mark as favourite//important level 1
+                        }
+                        toOperate.save();
+                        addToList(toOperate);
+                        adapter.notifyDataSetChanged();
+                        Log.d("debug", "changed priority of an element");
                         break;
                     default:
                         message = "Not implemented";

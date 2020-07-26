@@ -16,12 +16,13 @@ public class DatabaseManager {
         element.save();
     }
 
-    public Element insertElement(long id, String content, boolean encrypted){
+    public Element insertElement(long id, String content, boolean encrypted, int priority){
         Element element = new Element();
         element.setId(id);
         element.setContent(content);
         element.setEncrypted(encrypted);
         element.setLastModification(new Date(System.currentTimeMillis()));
+        element.setPriority(priority);
         element.save();
         return element;
     }
