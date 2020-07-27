@@ -2,6 +2,7 @@ package com.marsanpat.greta.Activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,7 +14,14 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NavUtils;
 
 import com.marsanpat.greta.R;
+import com.marsanpat.greta.Utils.Backups.JSONManager;
+import com.marsanpat.greta.Utils.Files.FileManager;
 import com.marsanpat.greta.ui.settings.SettingsFragment;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import static com.raizlabs.android.dbflow.config.FlowManager.getContext;
 

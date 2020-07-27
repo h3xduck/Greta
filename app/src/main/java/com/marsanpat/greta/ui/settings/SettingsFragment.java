@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -16,6 +19,7 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.marsanpat.greta.Activities.MainActivity;
+import com.marsanpat.greta.Activities.SettingsActivity;
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.R;
@@ -35,6 +39,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 
@@ -91,10 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                     FileManager fileManager = new FileManager();
                     String returnedPath = fileManager.createAndWriteFile(backup.toString(), MainActivity.backupFolder, "gretaExport.json");
-
-
-                    toastManager.showSimpleToast(getContext(),"Export successful", Toast.LENGTH_LONG);
-
+                    toastManager.showSimpleToast(getContext(), "Export successful", Toast.LENGTH_LONG);
                     Log.d("debug", "Exported to: "+returnedPath);
                 }catch(JSONException ex){
                     Log.w("debug", "exception creating json export:\n"+ex.toString());
@@ -219,8 +222,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             Log.d("debug", "IMPORTED SALT:\n"+salt.toString());
             salt.save();
         }
-
         toastManager.showSimpleToast(getContext(),"Import successful", Toast.LENGTH_LONG);
 
     }
+
+
 }
+

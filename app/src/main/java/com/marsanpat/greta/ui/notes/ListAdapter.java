@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -52,6 +54,7 @@ public class ListAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent){
         if(convertView==null) {
             convertView = LayoutInflater.from(this.context).inflate(R.layout.view_note_item, null);
+
         }
         final Element element = listContents.get(position);
         TextView content = (TextView)convertView.findViewById(R.id.item_preview);
@@ -113,6 +116,9 @@ public class ListAdapter extends BaseAdapter {
             convertView.setBackgroundColor(Color.TRANSPARENT);
         }
 
+        //Very simple animation, not very optimal since it animates every view
+        Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+        convertView.startAnimation(animation);
 
 
 
