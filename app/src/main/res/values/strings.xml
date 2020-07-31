@@ -338,7 +338,11 @@ Exhibit B - “Incompatible With Secondary Licenses” Notice
     <string name="message_export_successful">Export successful</string>
     <string name="message_import_successful">Import successful</string>
 
-    <string name="language_selected_title">Change app language</string>
+    <string name="language_selected_title">Change app language (experimental)</string>
     <string name="menu_about">About</string>
+    <string name="button_save">Save</string>
+    <string name="button_exit">Exit</string>
+    <string name="message_editnote_hint">Your note</string>
+    <string name="message_passwordactivity">Please enter your password</string>
 
 </resources>

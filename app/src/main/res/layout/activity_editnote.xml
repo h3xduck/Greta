@@ -22,9 +22,9 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#00FFFFFF"
             android:ems="10"
-            android:hint="Your note"
+            android:hint="@string/message_editnote_hint"
             android:inputType="textMultiLine|textPersonName"
-            android:paddingEnd="100dip" />
+             />
     </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
@@ -37,14 +37,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:text="Save" />
+            android:text="@string/button_save" />
 
         <Button
             android:id="@+id/exitBut"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1.0"
-            android:text="Exit" />
+            android:text="@string/button_exit" />
 
     </LinearLayout>
 

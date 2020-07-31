@@ -56,6 +56,10 @@
     <string name="message_notes_sucess_deleted">Notas borradas con éxito</string>
     <string name="message_export_successful">Exportación realizada con éxito</string>
     <string name="message_import_successful">Importación realizada con éxito</string>
-    <string name="language_selected_title">Cambiar idioma de la aplicación</string>
+    <string name="language_selected_title">Cambiar idioma de la aplicación (experimental)</string>
     <string name="menu_about">Sobre Greta</string>
+    <string name="button_save">Guardar</string>
+    <string name="button_exit">Salir</string>
+    <string name="message_editnote_hint">Empieza a escribir...</string>
+    <string name="message_passwordactivity">Introduce tu contraseña</string>
 </resources>

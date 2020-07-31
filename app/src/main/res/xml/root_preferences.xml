@@ -22,10 +22,12 @@
             android:key="disable_delete"
             android:summary="@string/disableDelete_summary"/>
         <ListPreference
+            android:layout_height="wrap_content"
             android:entries="@array/languages_entries"
             android:entryValues="@array/languages_values"
             android:key="language_preference"
-            android:title="@string/language_selected_title" />
+            android:title="@string/language_selected_title"
+            app:singleLineTitle="false" />
 
     </PreferenceCategory>
 
