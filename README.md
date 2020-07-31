@@ -50,6 +50,7 @@ Note that, although it has been released to the public and I am actively maintai
  **I am not responsible** for harm of any nature derived from its use.
 
 In the future, Greta will be integrated into a larger, more ambitious project which I will eventually release as well.
+
 -------------------------
 ## License
 This project is released under the GPL v3 license. See LICENSE.
