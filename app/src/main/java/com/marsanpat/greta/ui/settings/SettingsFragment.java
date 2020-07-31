@@ -57,15 +57,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-                        .setTitle("Delete Everything")
-                        .setMessage("Are you sure you want to perform this action?")
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.message_title_delete_everything)
+                        .setMessage(R.string.message_sure_action)
+                        .setNegativeButton(R.string.message_cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Nothing
                             }
                         })
-                        .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.message_accept, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 NoteManager noteManager = new NoteManager();
@@ -75,7 +75,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                                 }else{
                                     //Restart recommended, since notes are cached in the notefragment.
                                     //We could erase them, but for now let's just inform the user.
-                                    toastManager.showSimpleToast(getContext(),"Notes successfully deleted", Toast.LENGTH_LONG);
+                                    toastManager.showSimpleToast(getContext(),getString(R.string.message_notes_sucess_deleted), Toast.LENGTH_LONG);
                                 }
                             }
                         });
@@ -97,7 +97,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
                     FileManager fileManager = new FileManager();
                     String returnedPath = fileManager.createAndWriteFile(backup.toString(), MainActivity.backupFolder, "gretaExport.json");
-                    toastManager.showSimpleToast(getContext(), "Export successful", Toast.LENGTH_LONG);
+                    toastManager.showSimpleToast(getContext(), getString(R.string.message_export_successful), Toast.LENGTH_LONG);
                     Log.d("debug", "Exported to: "+returnedPath);
                 }catch(JSONException ex){
                     Log.w("debug", "exception creating json export:\n"+ex.toString());
@@ -222,7 +222,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             Log.d("debug", "IMPORTED SALT:\n"+salt.toString());
             salt.save();
         }
-        toastManager.showSimpleToast(getContext(),"Import successful", Toast.LENGTH_LONG);
+        toastManager.showSimpleToast(getContext(),getString(R.string.message_import_successful), Toast.LENGTH_LONG);
 
     }
 

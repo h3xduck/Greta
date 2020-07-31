@@ -13,6 +13,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:configChanges="locale|orientation"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.WelcomeActivity"></activity>
         <activity
@@ -21,9 +22,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".Activities.MainActivity" />
 
+            android:parentActivityName=".Activities.MainActivity" />
+        <!--android:label="@string/title_activity_settings" For some reason this does not get translated-->
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".Activities.MainActivity" />

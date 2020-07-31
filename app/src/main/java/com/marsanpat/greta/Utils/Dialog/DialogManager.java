@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
+import com.marsanpat.greta.R;
 import com.marsanpat.greta.Views.ScrollableDialogView;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
@@ -34,7 +35,7 @@ public class DialogManager {
         AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.message_accept, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //It just quits

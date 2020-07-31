@@ -92,10 +92,10 @@ public class ListAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Are you sure you want to remove this note?");
-                    builder.setMessage("This action cannot be undo");
-                    builder.setNegativeButton("Cancel", null );
-                    builder.setPositiveButton("Accept", new DialogInterface.OnClickListener(){
+                    builder.setTitle(R.string.message_sure_remove_note);
+                    builder.setMessage(R.string.message_action_undo);
+                    builder.setNegativeButton(R.string.message_cancel, null );
+                    builder.setPositiveButton(R.string.message_accept, new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             NotesFragment.removeFromList(element);

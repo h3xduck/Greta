@@ -21,6 +21,11 @@
         <SwitchPreferenceCompat android:title="@string/disableDelete_title"
             android:key="disable_delete"
             android:summary="@string/disableDelete_summary"/>
+        <ListPreference
+            android:entries="@array/languages_entries"
+            android:entryValues="@array/languages_values"
+            android:key="language_preference"
+            android:title="@string/language_selected_title" />
 
     </PreferenceCategory>
 

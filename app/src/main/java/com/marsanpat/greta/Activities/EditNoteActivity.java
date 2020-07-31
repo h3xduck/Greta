@@ -52,9 +52,9 @@ public class EditNoteActivity extends AppCompatActivity {
                 if(encryptionPassword!=null){ //Means we need to encrypt the element later
                     if(noteManager.saveNoteAndEncrypt(input, detectedId, encryptionPassword, true)==-1){
                         //error
-                        toastManager.showSimpleToast(getApplicationContext(), "Please write something before saving", 1);
+                        toastManager.showSimpleToast(getApplicationContext(), getString(R.string.message_empty_note), 1);
                     }else{
-                        toastManager.showSimpleToast(getApplicationContext(), "Note saved", 1);
+                        toastManager.showSimpleToast(getApplicationContext(), getString(R.string.message_note_saved), 1);
 
                         setResult(Activity.RESULT_OK);
                         finish();
@@ -62,9 +62,9 @@ public class EditNoteActivity extends AppCompatActivity {
                 }else{
                     if(noteManager.saveNote(input, detectedId, false)==-1){
                         //error
-                        toastManager.showSimpleToast(getApplicationContext(), "Please write something before saving", 1);
+                        toastManager.showSimpleToast(getApplicationContext(), getString(R.string.message_empty_note), 1);
                     }else{
-                        toastManager.showSimpleToast(getApplicationContext(), "Note saved", 1);
+                        toastManager.showSimpleToast(getApplicationContext(), getString(R.string.message_note_saved), 1);
 
                         setResult(Activity.RESULT_OK);
                         finish();

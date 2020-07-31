@@ -13,4 +13,14 @@
         <item>importance_htl</item>
         <item>importance_lth</item>
     </string-array>
+
+    <string-array name="languages_entries">
+        <item>English</item>
+        <item>Español</item>
+    </string-array>
+
+    <string-array name="languages_values">
+        <item>en</item>
+        <item>es</item>
+    </string-array>
 </resources>

@@ -1,17 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Greta</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
     <string name="nav_header_title">Greta</string>
     <string name="nav_header_subtitle">marcossanchezbajo@gmail.com</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_desc" translatable="false">Navigation header</string>
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
     <string name="menu_notes">Notes</string>
     <string name="menu_dbshow">Database</string>
 
-    <string name="home_second">Home Second</string>
+    <string name="home_second" translatable="false">Home Second</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
@@ -28,21 +28,21 @@
     <string name="order_title">Order notes by…</string>
     <!-- I&E Preferences -->
     <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    <string name="attachment_title" translatable="false">Download incoming attachments</string>
+    <string name="attachment_summary_on" translatable="false">Automatically download attachments for incoming emails
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="title_activity_password">PasswordActivity</string>
+    <string name="attachment_summary_off" translatable="false">Only download attachments when manually requested</string>
+    <string name="title_activity_password" translatable="false">PasswordActivity</string>
 
 
     <string name="export_note_title">Export notes</string>
-    <string name="export_note_key">export</string>
+    <string name="export_note_key" translatable="false">export</string>
 
     <string name="import_note_title">Import notes</string>
-    <string name="import_note_key">import</string>
+    <string name="import_note_key" translatable="false">import</string>
 
 
-    <string name="resetAllButton_key">resetAll</string>
+    <string name="resetAllButton_key" translatable="false">resetAll</string>
     <string name="resetAllButton_title">Reset all notes</string>
 
     <string name="issues_title">Got any issues with the app?</string>
@@ -50,18 +50,26 @@
 
 
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="first_fragment_label" translatable="false">First Fragment</string>
+    <string name="second_fragment_label" translatable="false">Second Fragment</string>
     <string name="accept_password">Accept</string>
     <string name="previous">Previous</string>
 
     <string name="message_password_fragment">Please enter your password</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="hello_second_fragment" translatable="false">Hello second fragment. Arg: %1$s</string>
 
     <string name="about_button_text">Show license</string>
+
+
+    <!--EditNoteActivity-->
+    <string name="message_empty_note">"Please write something before saving"</string>
+    <string name="message_note_saved">"Note saved"</string>
+
+
     <!-- Licenses -->
     <string name="dbflow_title">DbFlow (Database Management)</string>
-    <string name="dbflow_license" tools:ignore="TypographyOther">The MIT License (MIT)
+    <string name="dbflow_license" tools:ignore="TypographyOther" translatable="false">The MIT License (MIT)
+
 
 Copyright (c) 2014 Raizlabs
 
@@ -83,7 +91,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
 
-    <string name="java_aes_crypto_license" tools:ignore="TypographyOther">The MIT License (MIT)
+    <string name="java_aes_crypto_license" tools:ignore="TypographyOther" translatable="false">The MIT License (MIT)
 
 Copyright (c) 2014-2015 Tozny, LLC; (http://tozny.com)
 
@@ -105,7 +113,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
 
-    <string name="nononsensefilepicker_license">
+    <string name="nononsensefilepicker_license" translatable="false">
 Mozilla Public License
 Version 2.0
 1. Definitions
@@ -267,7 +275,7 @@ Exhibit B - “Incompatible With Secondary Licenses” Notice
 
 </string>
     <string name="explanation_button_text">About Greta</string>
-    <string name="explanation_text"><![CDATA[
+    <string name="explanation_text" translatable="false"><![CDATA[
     <br></br>
     <h1>Why yet another notes application?</h1>
     <p>I am tempted to say that you already know the answer to this question. Go ahead, open Google Play, and search for note management apps.
@@ -300,5 +308,37 @@ Exhibit B - “Incompatible With Secondary Licenses” Notice
      this app and in fact I will not even know that you did it, unless you want to <a href<=https://github.com/marsan27>say hi</a>. The only reason I created it was to practice -since I am still studying-, to contribute for once to the great open source community, and to fill a gap which I felt that existed with
      respect to open source, locally stored, encrypted notes apps. And that last point, the fact that <b>it was built for me</b> and that it\'s not just another app I built to steal user\'s data, is the best that I have to offer.</p>
 ]]></string>
+
+
+    <string name="message_empty_password">Password cannot be empty</string>
+    <string name="message_contact_github"><![CDATA[<a href=https://github.com/marsan27> Contact me on github :) ]]></string>
+    <string name="message_mit_license">MIT License</string>
+    <string name="message_mozilla_license" translatable="false">Mozilla Public License 2.0</string>
+    <string name="message_sure_remove_note">Are you sure you want to remove this note?</string>
+    <string name="message_action_undo">This action cannot be undo</string>
+    <string name="message_cancel">Cancel</string>
+    <string name="message_accept">Accept</string>
+    <string name="message_mark_favourite">Mark as favourite</string>
+    <string name="message_remove_favourite">Remove from favourites</string>
+    <string name="message_edit">Edit</string>
+    <string name="message_remove">Remove</string>
+    <string name="message_moreinfo">More Info</string>
+    <string name="message_decrypt">Decrypt this note</string>
+    <string name="message_encrypt">Encrypt this note</string>
+    <string name="message_enter_password">Enter encryption password</string>
+    <string name="message_wrong_password">Wrong password</string>
+    <string name="message_note_options">Note Options</string>
+    <string name="message_sure_edit">Do you want to edit this note?</string>
+    <string name="message_last_modification">\"Last Modification: \"</string>
+    <string name="message_note_decrypted_perm">This message will be permanently decrypted</string>
+    <string name="message_explanation_encryption">By encrypting this note, a password will be needed for any modification and its visualization</string>
+    <string name="message_title_delete_everything">Delete Everything</string>
+    <string name="message_sure_action">Are you sure you want to perform this action?</string>
+    <string name="message_notes_sucess_deleted">Notes successfully deleted</string>
+    <string name="message_export_successful">Export successful</string>
+    <string name="message_import_successful">Import successful</string>
+
+    <string name="language_selected_title">Change app language</string>
+    <string name="menu_about">About</string>
 
 </resources>

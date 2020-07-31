@@ -2,8 +2,11 @@ package com.marsanpat.greta.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -21,6 +24,8 @@ import androidx.preference.PreferenceManager;
 import com.marsanpat.greta.R;
 import com.marsanpat.greta.Utils.Notifications.NotificationUtils;
 import com.marsanpat.greta.ui.notes.NotesFragment;
+
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -105,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         ENCRYPTED_NOTE_PREVIEW = sharedPreferences.getString("encryption_preview", "************");
         NOTES_ORDER_METHOD = sharedPreferences.getString("order", "date_nto");
         RECYCLE_BIN_BUTTON_DEACTIVATED = sharedPreferences.getBoolean("disable_delete", false);
+        //setLocale(sharedPreferences.getString("language_preference", "en"));
 
         if(ENCRYPTED_NOTE_PREVIEW.equals("")){
             ENCRYPTED_NOTE_PREVIEW="************";
@@ -127,6 +133,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }else if(key.equals("disable_delete")){
             Log.d("debug", "delete icon preference changed");
             RECYCLE_BIN_BUTTON_DEACTIVATED = sharedPreferences.getBoolean("disable_delete", false);
+        }else if(key.equals("language_preference")){
+            String locale = sharedPreferences.getString("language_preference", "en");
+            Log.d("debug", "language changed to "+locale);
+            setLocale(locale);
         }
     }
 
@@ -136,6 +146,20 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
+
+    public void setLocale(String lang) {
+        Locale myLocale = new Locale(lang);
+        Locale.setDefault(myLocale);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        res.updateConfiguration(conf, dm);
+        Intent refresh = new Intent(this, MainActivity.class);
+        finish();
+        startActivity(refresh);
+    }
+
 
    /* @Override
     public Resources.Theme getTheme() {

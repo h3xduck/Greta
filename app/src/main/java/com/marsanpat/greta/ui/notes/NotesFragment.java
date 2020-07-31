@@ -105,12 +105,12 @@ public class NotesFragment extends Fragment {
                 //The options are different depending on whether the element is encrypted or not
                 String [] options;
                 boolean encrypted;
-                String favouriteOption = element.getPriority()==0 ? "Mark as favourite" : "Remove from favourites";
+                String favouriteOption = element.getPriority()==0 ? getString(R.string.message_mark_favourite) : getString(R.string.message_remove_favourite);
                 if(element.isEncrypted()){
-                    options = new String[]{"Edit", "Remove", "More Info", "Decrypt this note", favouriteOption};
+                    options = new String[]{getString(R.string.message_edit), getString(R.string.message_remove), getString(R.string.message_moreinfo), getString(R.string.message_decrypt), favouriteOption};
                     encrypted = true;
                 }else{
-                    options = new String[]{"Edit", "Remove", "More Info", "Encrypt this note", favouriteOption};
+                    options = new String[]{getString(R.string.message_edit), getString(R.string.message_remove), getString(R.string.message_moreinfo), getString(R.string.message_encrypt), favouriteOption};
                     encrypted = false;
                 }
                 showAlarmDialogForElement(getContext(), elementId, options, encrypted);
@@ -242,7 +242,7 @@ public class NotesFragment extends Fragment {
 
     public void promptForPassword(Context context, final Element element, final boolean keepEncryption, final boolean showNoteActivity){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Enter encryption password");
+        builder.setTitle(R.string.message_enter_password);
 
         // Set up the input
         final EditText input = new EditText(context);
@@ -256,7 +256,7 @@ public class NotesFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 String password = input.getText().toString();
                 if(password.equals("")){
-                    Toast.makeText(getContext(), "Password cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), getString(R.string.message_empty_password), Toast.LENGTH_SHORT).show();
                 }else{
                     try{
                         Element decryptedElement = CryptoUtils.decryptElement(element, password);
@@ -278,7 +278,7 @@ public class NotesFragment extends Fragment {
 
                     }catch(Exception ex){
                         //Problems during decryption: wrong password or unsupported encoding for the device
-                        Toast.makeText(getContext(), "Wrong password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.message_wrong_password), Toast.LENGTH_SHORT).show();
                         //TODO distinguish between the cases
                     }
                 }
@@ -286,7 +286,7 @@ public class NotesFragment extends Fragment {
 
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.message_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -298,7 +298,7 @@ public class NotesFragment extends Fragment {
 
     public void showAlarmDialogForElement(final Context context, final long elementId, final String[] options, final boolean encrypted){
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Note Options");
+        builder.setTitle(R.string.message_note_options);
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, final int item) { //item is the option selected
@@ -309,24 +309,24 @@ public class NotesFragment extends Fragment {
                 switch (item){
                     case 0:
                         //Edit
-                        message = "Do you want to edit this note?";
+                        message = getString(R.string.message_sure_edit);
                         break;
                     case 1:
                         //Remove
-                        message = "Are you sure to remove this note?";
+                        message = getString(R.string.message_sure_remove_note);
                         break;
                     case 2:
                         //More info
                         //No need to show any warning
-                        String info = "Last Modification: "+toOperate.getLastModification().toString();
+                        String info = getString(R.string.message_last_modification)+toOperate.getLastModification().toString();
                         DialogManager.showSimpleDialog(context,options[item],info);
                         break;
                     case 3:
                         //Encryption or decryption
                         if(encrypted){
-                            message = "This message will be permanently decrypted";
+                            message = getString(R.string.message_note_decrypted_perm);
                         }else{
-                            message = "By encrypting this note, a password will be needed for any modification and its visualization";
+                            message = getString(R.string.message_explanation_encryption);
                         }
                         break;
                     case 4:
@@ -353,14 +353,13 @@ public class NotesFragment extends Fragment {
                     new AlertDialog.Builder(context)
                             .setTitle(options[item])
                             .setMessage(message)
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.message_cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    //TODO REMOVE
-                                    Toast.makeText(context, "Cancelled", Toast.LENGTH_SHORT).show();
+                                    
                                 }
                             })
-                            .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.message_accept), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     //First we get rid of the old element, independently on what happens

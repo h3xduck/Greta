@@ -26,7 +26,7 @@ public class AboutFragment extends Fragment {
         root = inflater.inflate(R.layout.fragment_about, container, false);
 
         TextView githubLink = (TextView) root.findViewById(R.id.tv_telegram);
-        githubLink.setText(Html.fromHtml("<a href=https://github.com/marsan27> Contact me on github :) "));
+        githubLink.setText(Html.fromHtml(getString(R.string.message_contact_github)));
         githubLink.setHighlightColor(getResources().getColor(R.color.colorPrimary));
         githubLink.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -35,7 +35,7 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DialogManager dialogManager = new DialogManager();
-                dialogManager.showScrollableDialog(getContext(), "MIT License", getResources().getString(R.string.dbflow_license));
+                dialogManager.showScrollableDialog(getContext(), getString(R.string.message_mit_license), getResources().getString(R.string.dbflow_license));
             }
         });
 
@@ -44,7 +44,7 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DialogManager dialogManager = new DialogManager();
-                dialogManager.showScrollableDialog(getContext(), "MIT License", getResources().getString(R.string.java_aes_crypto_license));
+                dialogManager.showScrollableDialog(getContext(), getString(R.string.message_mit_license), getResources().getString(R.string.java_aes_crypto_license));
             }
         });
 
@@ -53,7 +53,7 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 DialogManager dialogManager = new DialogManager();
-                dialogManager.showScrollableDialog(getContext(), "Mozilla Public License 2.0", getResources().getString(R.string.nononsensefilepicker_license));
+                dialogManager.showScrollableDialog(getContext(), getString(R.string.message_mozilla_license), getResources().getString(R.string.nononsensefilepicker_license));
             }
         });
 

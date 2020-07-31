@@ -51,7 +51,7 @@ public class PasswordActivity extends AppCompatActivity {
                 TextView passwordInput = findViewById(R.id.et_password);
                 String password = passwordInput.getText().toString();
                 if(password.equals("")){
-                    new ToastManager().showSimpleToast(getContext(), "Password cannot be empty", Toast.LENGTH_SHORT);
+                    new ToastManager().showSimpleToast(getContext(), getString(R.string.message_empty_password), Toast.LENGTH_SHORT);
                     return;
                 }
 
