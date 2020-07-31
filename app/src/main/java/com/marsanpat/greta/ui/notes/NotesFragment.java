@@ -356,7 +356,7 @@ public class NotesFragment extends Fragment {
                             .setNegativeButton(R.string.message_cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    
+
                                 }
                             })
                             .setPositiveButton(getString(R.string.message_accept), new DialogInterface.OnClickListener() {
