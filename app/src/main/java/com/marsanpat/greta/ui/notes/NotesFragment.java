@@ -216,7 +216,7 @@ public class NotesFragment extends Fragment {
         startActivityForResult(intent,1);
     }
 
-    // Call Back method
+    // Still to find a use for it
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -332,15 +332,15 @@ public class NotesFragment extends Fragment {
                     case 4:
                         //Mark as important or not
                         //No need to show any warning
-                        removeFromList(toOperate);
+                        int newPriority = 0;
                         if(toOperate.getPriority()>0){
-                            toOperate.setPriority(0); //Deselect from favourites
+                            newPriority = 0; //Deselect from favourites
                         }else{
-                            toOperate.setPriority(1); //Mark as favourite//important level 1
+                            newPriority = 1; //Mark as favourite//important level 1
                         }
-                        toOperate.save();
-                        addToList(toOperate);
-                        adapter.notifyDataSetChanged();
+                        databaseManager.setElementFavorite(elementId,newPriority);
+                        refreshListViewWithNoCache();
+                        
                         Log.d("debug", "changed priority of an element");
                         break;
                     default:

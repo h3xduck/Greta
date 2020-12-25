@@ -1,9 +1,13 @@
 package com.marsanpat.greta.Utils.Database;
 
+import android.util.Log;
+
 import com.marsanpat.greta.Database.Element;
 import com.marsanpat.greta.Database.Element_Table;
+import com.marsanpat.greta.Database.MyDatabase;
 import com.marsanpat.greta.Database.Salt;
 import com.marsanpat.greta.Database.Salt_Table;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.util.Date;
@@ -120,4 +124,15 @@ public class DatabaseManager {
     public void deleteSalt(Element element){
         deleteSalt(element.getId());
     }
+
+
+    public void setElementFavorite(long idElement, int favourite){
+        SQLite.update(Element.class)
+                .set(Element_Table.priority.eq(favourite))
+                .where(Element_Table.id.is(idElement))
+                .execute();
+        Log.d("debug", "setElementFavorite"+favourite);
+    }
+
+
 }
