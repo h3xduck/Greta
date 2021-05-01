@@ -305,13 +305,13 @@ Exhibit B - “Incompatible With Secondary Licenses” Notice
 
      <p>On the other hand, I am aware of other trustworthy, open-source notes apps out there. Personally, I found the majority of them to include online functionalities which I did not want or other characteristics
      which I did not like, but I strongly encourage you to search for other open-source apps until you find the one which best fits your needs. I <em>do not obtain any benefit</em> from you downloading
-     this app and in fact I will not even know that you did it, unless you want to <a href<=https://github.com/marsan27>say hi</a>. The only reason I created it was to practice -since I am still studying-, to contribute for once to the great open source community, and to fill a gap which I felt that existed with
+     this app and in fact I will not even know that you did it, unless you want to <a href<=https://github.com/h3xduck>say hi</a>. The only reason I created it was to practice -since I am still studying-, to contribute for once to the great open source community, and to fill a gap which I felt that existed with
      respect to open source, locally stored, encrypted notes apps. And that last point, the fact that <b>it was built for me</b> and that it\'s not just another app I built to steal user\'s data, is the best that I have to offer.</p>
 ]]></string>
 
 
     <string name="message_empty_password">Password cannot be empty</string>
-    <string name="message_contact_github"><![CDATA[<a href=https://github.com/marsan27> Contact me on github :) ]]></string>
+    <string name="message_contact_github"><![CDATA[<a href=https://github.com/h3xduck> Contact me on github :) ]]></string>
     <string name="message_mit_license">MIT License</string>
     <string name="message_mozilla_license" translatable="false">Mozilla Public License 2.0</string>
     <string name="message_sure_remove_note">Are you sure you want to remove this note?</string>

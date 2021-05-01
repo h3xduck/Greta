@@ -31,7 +31,7 @@
     <string name="message_empty_note">Escriba algo antes de guardar</string>
     <string name="message_note_saved">Nota guardada</string>
     <string name="message_empty_password">La contraseña no puede estar vacía</string>
-    <string name="message_contact_github"><![CDATA[<a href=https://github.com/marsan27> Contáctame en github :) ]]></string>
+    <string name="message_contact_github"><![CDATA[<a href=https://github.com/h3xduck> Contáctame en github :) ]]></string>
     <string name="message_mit_license">Licencia MIT</string>
     <string name="message_sure_remove_note">¿Estás seguro de borrar esta nota?</string>
     <string name="message_action_undo">Esta acción no se puede deshacer</string>
