@@ -340,7 +340,7 @@ public class NotesFragment extends Fragment {
                         }
                         databaseManager.setElementFavorite(elementId,newPriority);
                         refreshListViewWithNoCache();
-                        
+
                         Log.d("debug", "changed priority of an element");
                         break;
                     default:

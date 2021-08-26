@@ -31,7 +31,7 @@
     <string name="message_empty_note">Escriba algo antes de guardar</string>
     <string name="message_note_saved">Nota guardada</string>
     <string name="message_empty_password">La contraseña no puede estar vacía</string>
-    <string name="message_contact_github"><![CDATA[<a href=https://github.com/marsan27> Contáctame en github :) ]]></string>
+    <string name="message_contact_github"><![CDATA[<a href=https://github.com/h3xduck> Contáctame en github :) ]]></string>
     <string name="message_mit_license">Licencia MIT</string>
     <string name="message_sure_remove_note">¿Estás seguro de borrar esta nota?</string>
     <string name="message_action_undo">Esta acción no se puede deshacer</string>
@@ -62,4 +62,40 @@
     <string name="button_exit">Salir</string>
     <string name="message_editnote_hint">Empieza a escribir...</string>
     <string name="message_passwordactivity">Introduce tu contraseña</string>
+    <string name="explanation_text"><![CDATA[
+    <br></br>
+    <h1>¿Quién necesitaría una aplicación de notas más?</h1>
+    <p>Me tienta decir que ya sabes la respuesta a esta pregunta. Vamos, abre Google Play, y busca alguna aplicación de notas.
+    Te verás inundado con apps originales y atractivas, bonitas a la vista y que aparecen ser fáciles de usar. Si eres como yo, empezarás
+    a descartar aquellas que tengan anuncios o necesiten de micropagos, pero por lo demás estoy seguro que en unos minutos te habrás hecho
+    con unas cuantas aplicaciones gratis que te gustaría usar.</p>
+    <p>Sin embargo, detente un segundo y piensa sobre lo que estás buscando. Quieres una app de notas, es decir, un lugar donde escribir sobre tus ideas y pensamientos,
+    y por tanto debe de ser merecedora de la enorme confianza que le estás dando. Está bien, sí, no vamos a guardar secretos de estado en el móvil, pero
+    aún así, ¿a que no te gustaría ni necesitas que tu amigo sepa que vas a comprarte X marca de calzones mañana? Entonces, ¿por qué vamos a dejar que una compañía
+    o desarrollador analice lo que escribes, tus datos, y por qué no decirlo, te espíe?</p>
+    <p>Esa es la triste verdad sobre las aplicaciones de notas para móvil. La mayoría son coloridas, atractivas trampas construidas para usuarios inocentes o
+    personas que simplemente creen que <a href<="https://en.wikipedia.org/wiki/Nothing_to_hide_argument"> no tienen nada que ocultar</a> cuando, al final,
+    esto ni siquiera debería ser algo anormal, no es más que exigir un poco de coherencia, y pedir aquello que se supone que
+    una app donde almacenas tus asuntos personales <b>debe</b> tener.</p>
+
+     <h2>¡Pero he encontrado apps que cifran mis notas con contraseña! Puesto que lo dicen, debe de ser verdad que mantienen mi privacidad.</h2>
+     <p>Sí, eso es lo que dicen. ¿Y para qué sirve decírlo? Para nada. ¿Acaso confiarías a ese amigo cotilla tus secretos? ¿Y a un desconocido? Porque estás haciendo justo eso,
+     no hay ninguna prueba de que hagan lo que dicen. Lo mismo están mandando tus notas o las claves de cifrado secretamente a un servidor remoto, o quizás están
+     siguiendo malos protocolos criptográficos, o incluso te están mintiendo con lo del cifrado directamente y no es más que una pantalla con una contraseña, pero con tus notas accesibles igualmente.
+     No deberías, jamás, confiar en un desarrollador en Internet más que lo que confías en un total desconocido.</p>
+
+     <p>Esta es la razón por la que creé Greta.</p>
+
+     <h3>Ya veo, pero por la misma razón que tú dices, ¿por qué debería confiar en tí y Greta?</h3>
+     <p>Insisto, no debes hacerlo solo porque sí. Tus notas, tus pensamientos, son - y deben siempre ser - solo tuyos. Esta aplicación es de código abierto, lo que significa que su
+     código fuente - las instrucciones que tu móvil correrá cuando uses la app - son completamente públicas y cualquiera puede mirar que Greta hace lo que yo digo.
+     Es también un programa <a href<=https://www.gnu.org/philosophy/free-sw.es.html>libre</a>, lo que significa que desde el momento que descargas Greta es total y completamente tuya. Tan sólo
+     has de recordar, de acuerdo a su licencia, que sí decides modificarla habrás de liberarla al público como yo hice para que todos disfrutemos de las mejoras que hagas.</p>
+
+    <p>Por otro lado, soy consciente de que Greta no es la única aplicación libre y de código abierto ahí fuera. Personalmente no me gusta que la mayoría se conecten a Internet - prefiero estar seguro
+    de que mis notas se quedarán donde yo las he escrito - y otras tenían algunas funcionalidades que sencillamente no necesitaba, pero te animo a que busques otras aplicaciones libres hasta
+    que encuentres aquella que mejor se adapte a tí. Yo no obtengo ningún beneficio porque tú hayas descargado Greta y ni siquiera sabré que lo has hecho, a menos que por supuesto quieras
+    <a href<=https://github.com/h3xduck>pasar a saludar</a>. La única razón por la que esta aplicación existe es para practicar - aún soy un estudiante -, para contribuir a la comunidad de código abierto,
+    y para llenar un vacío que siento que hay respecto a apps libres de notas cifradas guardadas en local. Esto último, el hecho de que la he creado <b> para mí </b> y no para que la descarguen masivamente y vender luego tus datos, es lo mejor que te puedo ofrecer.</p>
+]]></string>
 </resources>

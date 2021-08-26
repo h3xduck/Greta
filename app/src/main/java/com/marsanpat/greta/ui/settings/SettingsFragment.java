@@ -124,7 +124,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         reportIssuesButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                String url = "https://github.com/marsan27/Greta/issues";
+                String url = "https://github.com/h3xduck/Greta/issues";
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
