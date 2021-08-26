@@ -1,3 +1,7 @@
+![Maintainability](https://img.shields.io/static/v1?label=maintainability&message=C&color=green)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/h3xduck/Greta)
+![GitHub last commit](https://img.shields.io/github/last-commit/h3xduck/Greta)
+
 # Greta
 
 Greta is a lightweight yet powerful notes application built for Android which supports encryption and with a focus on security.
