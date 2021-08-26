@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="order_entries">
+        <item>Fecha (descendente)</item>
+        <item>Fecha (ascendente)</item>
+        <item>Importancia (descendente)</item>
+        <item>Importancia (ascendente)</item>
+    </string-array>
+
+</resources>
